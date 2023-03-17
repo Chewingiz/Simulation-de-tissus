@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef double A;
+typedef float A;
 
 typedef struct {
     A x;
@@ -28,22 +28,36 @@ typedef struct {
     A *FE;
 } Env;
 
-Vector3 tableau(int x, int y, Ressorts R, Poids P) {
-   for(int i = 0; i < x; i++) {
+A ** poids(int x, int y, int longueur, Poids P) {
+    A ** tableau_poids;
+    tableau_poids = malloc(sizeof(int *) * x);
+    for(int i = 0; i < x; i++) {
+        tableau_poids[i] = malloc(sizeof(int) * y);
+    }
+
+    for(int i = 0; i < x; i++) {
         for(int j = 0; j < y; j++) {
-            P.position.x = i * R.longueur;
-            P.position.y = j * R.longueur;
+            P.position.x = i * longueur;
+            P.position.y = j * longueur;
             P.position.z = 0;
+            tableau_poids[i][j] = P.position.x, P.position.y, P.position.z;
         }
     }
-    return P.position;
+    return tableau_poids;
 }
 
 void main() {
-    /*int x = 5;
+    int x = 5;
     int y = 5;
     Ressorts R;
     R.longueur = 3;
     Poids P;
-    Vector3 poids = tableau(x, y, R, P);*/
+    A ** tableau;
+    tableau = poids(x, y, R.longueur, P);
+    for(int i = 0; i < x; i++) {
+        for(int j = 0; j < y; j++) {
+            printf("%f ", tableau[i][j]);
+        }
+        printf("\n");
+    }
 }
