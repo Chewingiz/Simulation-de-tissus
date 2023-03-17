@@ -28,11 +28,11 @@ typedef struct {
     A *FE;
 } Env;
 
-A ** poids(int x, int y, int longueur, Poids P) {
-    A ** tableau_poids;
-    tableau_poids = malloc(sizeof(int *) * x);
+char ** poids(int x, int y, int longueur, Poids P) {
+    char ** tableau_poids;
+    tableau_poids = malloc(sizeof(char *) * x);
     for(int i = 0; i < x; i++) {
-        tableau_poids[i] = malloc(sizeof(int) * y);
+        tableau_poids[i] = malloc(sizeof(char) * y);
     }
 
     for(int i = 0; i < x; i++) {
@@ -40,8 +40,10 @@ A ** poids(int x, int y, int longueur, Poids P) {
             P.position.x = i * longueur;
             P.position.y = j * longueur;
             P.position.z = 0;
-            tableau_poids[i][j] = P.position.x, P.position.y, P.position.z;
+            tableau_poids[i][j] = '.';
+            printf("%s   ", &tableau_poids[i][j]);
         }
+        printf("\n\n");
     }
     return tableau_poids;
 }
@@ -52,12 +54,6 @@ void main() {
     Ressorts R;
     R.longueur = 3;
     Poids P;
-    A ** tableau;
-    tableau = poids(x, y, R.longueur, P);
-    for(int i = 0; i < x; i++) {
-        for(int j = 0; j < y; j++) {
-            printf("%f ", tableau[i][j]);
-        }
-        printf("\n");
-    }
+    char ** tableau;
+    tableau = poids(x, y, R.longueur, P);  
 }
