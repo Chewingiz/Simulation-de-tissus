@@ -12,7 +12,7 @@ typedef struct {
 typedef struct {
     Vector3 position;
     A masse;
-    Vector3 vitesse_instantane;  
+    Vector3 vitesse_instantanee;  
 } Poids;
 
 typedef struct {
@@ -50,6 +50,8 @@ char ** poids(int x, int y, int longueur, Poids P) {
 
 Poids** init_tableau_exemple(int x, int y, float longueur) {
     Poids** tableau_poids = malloc(sizeof(Poids*) * x);
+    Vector3 vitesse;
+    vitesse.x = 0.0; vitesse.y = 0.0; vitesse.z = 0.0;
 
     for (int i = 0; i < x; i++) {
         tableau_poids[i] = malloc(sizeof(Poids) * y);
@@ -58,6 +60,8 @@ Poids** init_tableau_exemple(int x, int y, float longueur) {
             tableau_poids[i][j].position.x = i * longueur;
             tableau_poids[i][j].position.y = j * longueur;
             tableau_poids[i][j].position.z = 0;
+            
+            tableau_poids[i][j].vitesse_instantanee = vitesse ;
         }
     }
     return tableau_poids;
@@ -76,6 +80,19 @@ void afficher_positions_tableau(Poids ** tableau, int taille_x, int taille_y){
     }
 }
 
+void afficher_vitesse_tableau(Poids ** tableau, int taille_x, int taille_y){
+    for(int i = 0; i < taille_x; i++) {
+        for(int j = 0; j < taille_y; j++) {
+            printf("[");
+            printf("x:%f, ",tableau[i][j].vitesse_instantanee.x );
+            printf("y:%f, ",tableau[i][j].vitesse_instantanee.y );
+            printf("z:%f,",tableau[i][j].vitesse_instantanee.z );
+            printf("] ");
+        }
+    printf("\n");
+    }
+}
+
 int main() {
     int x = 5;
     int y = 5;
@@ -85,6 +102,9 @@ int main() {
     Poids ** tableau;
     tableau = init_tableau_exemple(x , y, 2.3 ) ;
     afficher_positions_tableau(tableau, x , y);
+    printf("\n");
+
+    afficher_vitesse_tableau(tableau, x , y);
     //tableau = poids(x, y, R.longueur, P);  
     return 0;
 }
