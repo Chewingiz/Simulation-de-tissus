@@ -63,6 +63,7 @@ Poids** init_tableau_exemple(int x, int y, float longueur) {
             tableau_poids[i][j].position.z = 0;
             
             tableau_poids[i][j].vitesse_instantanee = vitesse ;
+            tableau_poids[i][j].masse = 5 ;
         }
     }
     return tableau_poids;
@@ -104,6 +105,32 @@ void maj_position(Poids ** tableau, int taille_x, int taille_y){
     }
 }
 
+void maj_vitesse(Poids* poids, Vector3 force) {
+    Vector3 acceleration;
+    acceleration.x = force.x / poids->masse;
+    acceleration.y = force.y / poids->masse;
+    acceleration.z = force.z / poids->masse;
+
+    Vector3 delta_vitesse;
+    delta_vitesse.x = acceleration.x * DT;
+    delta_vitesse.y = acceleration.y * DT;
+    delta_vitesse.z = acceleration.z * DT;
+
+    poids->vitesse_instantanee.x += delta_vitesse.x;
+    poids->vitesse_instantanee.y += delta_vitesse.y;
+    poids->vitesse_instantanee.z += delta_vitesse.z;
+}
+void maj_vitesses(Poids ** tableau, int taille_x, int taille_y){
+    Vector3 force;
+    for(int i = 0; i < taille_x; i++) {
+        for(int j = 0; j < taille_y; j++) {
+            //Calcule des forces
+            force.x = 0.0; force.y = 1.0; force.z = 0.0;
+            maj_vitesse(&tableau[i][j], force);
+        }
+    }
+}
+
 int main() {
     int x = 5;
     int y = 5;
@@ -116,6 +143,9 @@ int main() {
     printf("\n");
 
     afficher_vitesse_tableau(tableau, x , y);
-    //tableau = poids(x, y, R.longueur, P);  
+    //tableau = poids(x, y, R.longueur, P); 
+    maj_vitesses(tableau, x , y);
+    printf("\n");
+    afficher_vitesse_tableau(tableau, x , y);
     return 0;
 }
