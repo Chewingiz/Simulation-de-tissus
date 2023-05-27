@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 typedef float A;
+#define DT 0.1; // intervale de temps entre les images 
 
 typedef struct {
     A x;
@@ -93,12 +94,22 @@ void afficher_vitesse_tableau(Poids ** tableau, int taille_x, int taille_y){
     }
 }
 
+void maj_position(Poids ** tableau, int taille_x, int taille_y){
+    for(int i = 0; i < taille_x; i++) {
+        for(int j = 0; j < taille_y; j++) {
+            tableau[i][j].position.x += tableau[i][j].vitesse_instantanee.x * DT;
+            tableau[i][j].position.y += tableau[i][j].vitesse_instantanee.y * DT;
+            tableau[i][j].position.z += tableau[i][j].vitesse_instantanee.z * DT;
+        }
+    }
+}
+
 int main() {
     int x = 5;
     int y = 5;
-    Ressorts R;
-    R.longueur = 3;
-    Poids P;
+    //Ressorts R;
+    //R.longueur = 3;
+    //Poids P;
     Poids ** tableau;
     tableau = init_tableau_exemple(x , y, 2.3 ) ;
     afficher_positions_tableau(tableau, x , y);
