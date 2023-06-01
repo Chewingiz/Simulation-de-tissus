@@ -48,7 +48,7 @@ char ** poids(int x, int y, int longueur, Poids P) {
     }
     return tableau_poids;
 }*/
-
+/*longueure ressort*/
 Poids** init_tableau_exemple(int x, int y, float longueur) {
     Poids** tableau_poids = malloc(sizeof(Poids*) * x);
     Vector3 vitesse;
@@ -120,8 +120,10 @@ void maj_vitesse(Poids* poids, Vector3 force) {
     poids->vitesse_instantanee.y += delta_vitesse.y;
     poids->vitesse_instantanee.z += delta_vitesse.z;
 }
+
 void maj_vitesses(Poids ** tableau, int taille_x, int taille_y){
     Vector3 force;
+    //cal forces 
     for(int i = 0; i < taille_x; i++) {
         for(int j = 0; j < taille_y; j++) {
             //Calcule des forces
@@ -129,6 +131,15 @@ void maj_vitesses(Poids ** tableau, int taille_x, int taille_y){
             maj_vitesse(&tableau[i][j], force);
         }
     }
+}
+/*p1->p2*/
+Vector3 deformation(Poids p1, Poids p2){
+    Vector3 def;
+    def.x = p2.position.x - p1.position.x;
+    def.y = p2.position.y - p1.position.y;
+    def.z = p2.position.z - p1.position.z;
+    
+    return def;
 }
 
 int main() {
