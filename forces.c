@@ -30,9 +30,10 @@ v : vitesse de la boule en m`etre par seconde (m.s−1)
 */
 Vector3 f_resist(float viscosite, float rayon, Vector3 vitesse) {
     Vector3 force_resist;
-    force_resist.x = -6 * M_PI * viscosite * rayon * vitesse.x;
-    force_resist.y = -6 * M_PI * viscosite * rayon * vitesse.y;
-    force_resist.z = -6 * M_PI * viscosite * rayon * vitesse.z;
+    float constante = -6 * M_PI * viscosite * rayon;
+    force_resist.x = constante * vitesse.x;
+    force_resist.y = constante * vitesse.y;
+    force_resist.z = constante * vitesse.z;
     return force_resist;
 }
 
