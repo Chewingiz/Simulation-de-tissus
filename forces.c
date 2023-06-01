@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <math.h>
-
 #define g 9.800908285 // constante gravitationnelle
 
 typedef struct {
@@ -50,16 +49,16 @@ Vector3 f_pesanteur(float masse) {
 }
 
 /* Calcul de la force totale */
-
+//Vector3 * calculer_
 /*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/
-Vector3 calculer_force_totale(float k, Vector3 deformation, float viscosite, float rayon, Vector3 vitesse, float masse, Vector3 autres_forces) {
+/*Vector3 calculer_force_totale(Vector3 * tableau_f_rappel, float viscosite, float rayon, Vector3 vitesse, float masse, Vector3 autres_forces) {
     Vector3 force_totale;
 
-    Vector3 force_rappel = f_rappel(k, deformation);
+   // Vector3 force_rappel = f_rappel(k, deformation);
     Vector3 force_pesanteur = f_pesanteur(masse);
     
-    /*Calcul de la force + application résistance*/
-    Vector3 force_resist = f_resist(viscosite, rayon, vitesse);
+    //Calcul de la force + application résistance
+    Vector3 force_resist = f_resist(viscosite, rayon, vitesse);// vitesse précédente
 
     force_totale.x = force_rappel.x + force_resist.x + force_pesanteur.x + autres_forces.x;
     force_totale.y = force_rappel.y + force_resist.y + force_pesanteur.y + autres_forces.y;
@@ -67,6 +66,49 @@ Vector3 calculer_force_totale(float k, Vector3 deformation, float viscosite, flo
 
     return force_totale;
 }
+
+*/
+
+//calculs ressort 
+/* tableau_poids // tableau ressort (avec l'indice des deux relier)// 
+
+Longueure ressort au repos*/
+
+//Vector3 * calculs_ressorts
+Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_repos) {
+    Vector3 direction;
+    Vector3 direction_normalisee;
+    Vector3 force;
+
+    direction.x = Pb.x - Pa.x;
+    direction.y = Pb.y - Pa.y;
+    direction.z = Pb.z - Pa.z;
+
+    float distance = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z); // distance euclidienne 
+
+    direction_normalisee.x = direction.x / distance;
+    direction_normalisee.y = direction.y / distance;
+    direction_normalisee.z = direction.z / distance;
+
+
+	float kld = k * (longueur_ressort_repos - distance);
+    force.x = (direction_normalisee.x / distance) * kld;
+    force.y = (direction_normalisee.y / distance) * kld;
+    force.z = (direction_normalisee.z / distance) * kld;
+
+    return force;
+}
+
+/*
+calcul tables de ressort 
+
+tableau vec3 toutes les forces appliquée à un poid par les ressorts
+entré [tableau des poids, tableau des ressorts, longeur ressort au repos et K]
+
+créé le tableau de taille (taille liste des poids) initialiser tout les vec à (0,0,0) // pour le retour
+iterer sur le tableau des ressorts, faire les calcules entre les deux points avec calculs_ressort et ajouter le resultat au niveua de l'index des deux points.
+
+*/
 
 int main(void) {
     // Test
@@ -78,9 +120,9 @@ int main(void) {
     float masse = 1.5;              // Masse de l'objet
 	Vector3 vent = {1.0, 0.0, 0.0};  
 	
-    Vector3 force_totale = calculer_force_totale(k, deformation, viscosite, rayon, vitesse, masse, vent);
+    /*Vector3 force_totale = calculer_force_totale(k, deformation, viscosite, rayon, vitesse, masse, vent);
 
-    printf("Force totale : [%f, %f, %f]\n", force_totale.x, force_totale.y, force_totale.z);
+    printf("Force totale : [%f, %f, %f]\n", force_totale.x, force_totale.y, force_totale.z);*/
 
     return 0;
 }
