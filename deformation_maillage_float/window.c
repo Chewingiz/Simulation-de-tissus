@@ -1,13 +1,3 @@
-/*!\file window.c
- *
- * \brief GL4Dummies, exemple 3D avec fabrication indexée d'un
- * triangle plein, texturé.  plus des transformations spaciales
- * projection/modélisation utilisant les fonction gl4duXXX
- * 
- * \author Farès BELHADJ, amsi@up8.edu
- * \date February 6 2023
- */
-
 #include <GL4D/gl4du.h>
 #include <GL4D/gl4duw_SDL2.h>
 #include <math.h>
@@ -68,10 +58,10 @@ Vector3** init_table(int rows, int cols) {
   for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
           // Assigner des valeurs aux membres x, y et z
-          data[i][j].x = (float)i/10; // Valeur de x basée sur l'indice de ligne
+          data[i][j].x = (float)i; // Valeur de x basée sur l'indice de ligne
           data[i][j].y = 0.0f;  // Valeur de y basée sur l'indice de colonne
-          data[i][j].z = (float)j/10;  // Valeur de z constante pour un plan
-          if (i==5){data[i][j].y = 0.5f;}
+          data[i][j].z = (float)j;  // Valeur de z constante pour un plan
+          if (i>5){data[i][j].y = 1.f;}
       }
   }
 
@@ -89,11 +79,11 @@ GLuint createVertexTexture(Vector3** data, int width, int height) {
         for (int col = 0; col < width; col++) {
             int index = (row * width + col) * 3;
             flattenedData[index] = data[row][col].x;
-            printf("%f, ",flattenedData[index]);
+            //printf("%f, ",flattenedData[index]);
             flattenedData[index + 1] = data[row][col].y;
-            printf("%f, ",flattenedData[index+1]);
+            //printf("%f, ",flattenedData[index+1]);
             flattenedData[index + 2] = data[row][col].z;
-            printf("%f, ",flattenedData[index+2]);
+            //printf("%f, ",flattenedData[index+2]);
         }
     }
 
@@ -126,7 +116,6 @@ void init(void) {
   tableau_principal = init_table(10, 10);
   createVertexTexture(tableau_principal, 10, 10);
   
-  
 }
 
 void key(int keycode) {
@@ -142,12 +131,12 @@ void key(int keycode) {
 
 
 void draw(void) {
-  GLfloat Lp[] = { -2.0f, 0.2f, 0.0f, 1.0f };
+  GLfloat Lp[] = { -2.0f, 2.f, 0.0f, 1.0f };
 
   static GLfloat angle = 0.0f;
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  Lp[0] = -2.0f * cos(angle * M_PI / (5.0f * 180.0f));
+  Lp[0] = -4.0f * cos(angle * M_PI / (1.0f * 180.0f));
   GLfloat bleu[] = {0, 0, 1, 1};
 
   glUseProgram(_pId);
@@ -156,7 +145,7 @@ void draw(void) {
 
   gl4duLoadIdentityf();
 
-  gl4duLookAtf(2, 2, 3, 0, 0, 0, 0, 1, 0);
+  gl4duLookAtf(15, 15, 20, 0, 0, 0, 0, 1, 0);
 
   gl4duBindMatrix("modelMatrix");
   gl4duLoadIdentityf();
