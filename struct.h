@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef float A;
+#define DT 0.1; // intervale de temps entre les images 
+#define g 9.800908285 // constante gravitationnelle
+
+typedef struct {
+    A x;
+    A y;
+    A z;
+} Vector3;
+
+typedef struct {
+    Vector3 position;
+    A masse;
+    Vector3 vitesse_instantanee;  
+} Poids;
+
+typedef struct {
+    A force_rappel;
+    A constante_rappel;
+    int longueur;
+} Ressorts;
+
+typedef struct {
+    A delta_t_;
+    Vector3 gravite;
+    int nmb_forces;
+    A *FE;
+} Env;

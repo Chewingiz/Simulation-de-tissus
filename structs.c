@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "struct.h"
+#include "main.c"
 
-typedef float A;
+/*typedef float A;
 #define DT 0.1; // intervale de temps entre les images 
 
 typedef struct {
@@ -27,7 +29,7 @@ typedef struct {
     Vector3 gravite;
     int nmb_forces;
     A *FE;
-} Env;
+} Env;*/
 /*
 char ** poids(int x, int y, int longueur, Poids P) {
     char ** tableau_poids;
@@ -85,7 +87,7 @@ void afficher_vitesse_tableau(Poids * tableau, int taille_x){
     }
 }
 
-void maj_position(Poids *tableau, int taille_x){
+/*void maj_position(Poids *tableau, int taille_x){
     for(int i = 0; i < taille_x; i++) {
         tableau[i].position.x += tableau[i].vitesse_instantanee.x * DT;
         tableau[i].position.y += tableau[i].vitesse_instantanee.y * DT;
@@ -117,16 +119,16 @@ void maj_vitesses(Poids * tableau, int taille_x){
         force.x = 0.0; force.y = 1.0; force.z = 0.0;
         maj_vitesse(&tableau[i], force);
     }
-}
+}*/
 /*p1->p2*/
-Vector3 deformation(Poids p1, Poids p2){
+/*Vector3 deformation(Poids p1, Poids p2){
     Vector3 def;
     def.x = p2.position.x - p1.position.x;
     def.y = p2.position.y - p1.position.y;
     def.z = p2.position.z - p1.position.z;
     
     return def;
-}
+}*/
 
 int main() {
     int x = 5;

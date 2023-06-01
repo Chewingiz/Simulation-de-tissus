@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <math.h>
-#define g 9.800908285 // constante gravitationnelle
+#include "struct.h"
+
+/*#define g 9.800908285 // constante gravitationnelle
 
 typedef struct {
     float x;
     float y;
     float z;
-} Vector3;
+} Vector3;*/
 
 /*       Forces intérieures      */
 //Ressort
@@ -30,10 +32,9 @@ v : vitesse de la boule en m`etre par seconde (m.s−1)
 */
 Vector3 f_resist(float viscosite, float rayon, Vector3 vitesse) {
     Vector3 force_resist;
-    float constante = -6 * M_PI * viscosite * rayon;
-    force_resist.x = constante * vitesse.x;
-    force_resist.y = constante * vitesse.y;
-    force_resist.z = constante * vitesse.z;
+    force_resist.x = -6 * M_PI * viscosite * rayon * vitesse.x;
+    force_resist.y = -6 * M_PI * viscosite * rayon * vitesse.y;
+    force_resist.z = -6 * M_PI * viscosite * rayon * vitesse.z;
     return force_resist;
 }
 
