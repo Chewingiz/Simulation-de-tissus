@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "struct.h"
+#include "structs.h"
 
 void maj_position(Poids *tableau, int taille_x){
     for(int i = 0; i < taille_x; i++) {
@@ -43,4 +41,23 @@ Vector3 deformation(Poids p1, Poids p2){
     def.z = p2.position.z - p1.position.z;
     
     return def;
+}
+
+int main() {
+    int x = 5;
+    //int y = 5;
+    //Ressorts R;
+    //R.longueur = 3;
+    //Poids P;
+    Poids * tableau;
+    tableau = init_tableau_exemple(x , 2.3) ;
+    afficher_positions_tableau(tableau, x);
+    printf("\n");
+
+    afficher_vitesse_tableau(tableau, x);
+    //tableau = poids(x, y, R.longueur, P); 
+    maj_vitesses(tableau, x);
+    printf("\n");
+    afficher_vitesse_tableau(tableau, x);
+    return 0;
 }

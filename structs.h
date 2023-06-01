@@ -29,3 +29,7 @@ typedef struct {
     int nmb_forces;
     A *FE;
 } Env;
+
+Poids* init_tableau_exemple(int x, float longueur) ;
+void afficher_positions_tableau(Poids * tableau, int taille_x);
+void afficher_vitesse_tableau(Poids * tableau, int taille_x);
