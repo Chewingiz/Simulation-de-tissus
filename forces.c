@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <math.h>
-#define g 9.800908285 // constante gravitationnelle
+#include "struct.h"
+
+/*#define g 9.800908285 // constante gravitationnelle
 
 typedef struct {
     float x;
     float y;
     float z;
-} Vector3;
+} Vector3;*/
 
 /*       Forces intérieures      */
 //Ressort
@@ -15,6 +17,62 @@ k : la constante de rappel en Newton par mètre (N/m),
 x : le d ́eformation en mètre (m).
 */
 
+<<<<<<< HEAD
+=======
+/*       Forces extérieures      */
+/*Calcul de la force de frottement du fluide en Newton.
+viscosite : la viscosité du fluide en Pascal seconde (P a · s),
+r : rayon de la boule en m`etre (m),
+v : vitesse de la boule en m`etre par seconde (m.s−1)
+*/
+Vector3 f_resist(float viscosite, float rayon, Vector3 vitesse) {
+    Vector3 force_resist;
+    force_resist.x = -6 * M_PI * viscosite * rayon * vitesse.x;
+    force_resist.y = -6 * M_PI * viscosite * rayon * vitesse.y;
+    force_resist.z = -6 * M_PI * viscosite * rayon * vitesse.z;
+    return force_resist;
+}
+
+
+/* Calcul de la force de pesanteur 
+m : masse de l'objet
+*/
+Vector3 f_pesanteur(float masse) {
+    Vector3 force_pesanteur;
+    force_pesanteur.x = 0.0;
+    force_pesanteur.y = 0.0;
+    force_pesanteur.z = -masse * g;
+    return force_pesanteur;
+}
+
+/* Calcul de la force totale */
+//Vector3 * calculer_
+/*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/
+/*Vector3 calculer_force_totale(Vector3 * tableau_f_rappel, float viscosite, float rayon, Vector3 vitesse, float masse, Vector3 autres_forces) {
+    Vector3 force_totale;
+
+   // Vector3 force_rappel = f_rappel(k, deformation);
+    Vector3 force_pesanteur = f_pesanteur(masse);
+    
+    //Calcul de la force + application résistance
+    Vector3 force_resist = f_resist(viscosite, rayon, vitesse);// vitesse précédente
+
+    force_totale.x = force_rappel.x + force_resist.x + force_pesanteur.x + autres_forces.x;
+    force_totale.y = force_rappel.y + force_resist.y + force_pesanteur.y + autres_forces.y;
+    force_totale.z = force_rappel.z + force_resist.z + force_pesanteur.z + autres_forces.z ;
+
+    return force_totale;
+}
+
+*/
+
+//calculs ressort 
+/* tableau_poids // tableau ressort (avec l'indice des deux relier)// 
+
+Longueure ressort au repos*/
+
+//Vector3 * calculs_ressorts
+>>>>>>> 4db32e0b65e1c4903e18b3ef5357a7c2656b13b1
 Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_repos) {
     Vector3 direction;
     Vector3 direction_normalisee;
