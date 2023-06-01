@@ -99,26 +99,48 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
     return force;
 }
 
-/*
-calcul tables de ressort 
 
-tableau vec3 toutes les forces appliquée à un poid par les ressorts
-entré [tableau des poids, tableau des ressorts, longeur ressort au repos et K]
+Vector3 add(Vector3 a, Vector3 b){
+    Vector3 res;
+    res.x = a.x + b.x;
+    res.y = a.y + b.y;
+    res.z = a.z + b.z;
+    return res;
+}
+Vector3 sub(Vector3 a, Vector3 b){
+    Vector3 res;
+    res.x = a.x - b.x;
+    res.y = a.y - b.y;
+    res.z = a.z - b.z;
+    return res;
+}
 
-créé le tableau de taille (taille liste des poids) initialiser tout les vec à (0,0,0) // pour le retour
-iterer sur le tableau des ressorts, faire les calcules entre les deux points avec calculs_ressort et ajouter le resultat au niveua de l'index des deux points.
+void tables_forces_ressorts(Vector3* tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
+    int i;
+    int* ressort;
+    Vector3 resultat_calcul_force, nouvelle_force_P1, nouvelle_force_P2;
+    for(i = 0; i < taille_tableau_ressorts; i++) {
+        ressort = tableau_ressorts[i];
+        resultat_calcul_force = calculs_ressort(tableau_poids[ressort[0]], tableau_poids[ressort[1]], k, longueur_ressort_repos);
+        nouvelle_force_P1 = add(tableau_forces_total_appliquer_sur_les_points_R[ressort[0]], resultat_calcul_force);
+        nouvelle_force_P2 = sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[1]], resultat_calcul_force);
+        tableau_forces_total_appliquer_sur_les_points_R[ressort[0]] = nouvelle_force_P1;
+        tableau_forces_total_appliquer_sur_les_points_R[ressort[1]] = nouvelle_force_P2;
+    }
+}
 
-*/
+
+
 
 int main(void) {
     // Test
-    float k = 10.0;                 // Constante de rappel
+    /*float k = 10.0;                 // Constante de rappel
     Vector3 deformation = {1.0, 2.0, 3.0};    // Déformation en x, y, z
     float viscosite = 0.8;          // Viscosité du fluide
     float rayon = 0.1;              // Rayon de la boule
     Vector3 vitesse = {2.0, 1.0, 3.0};        // Vitesse en x, y, z
     float masse = 1.5;              // Masse de l'objet
-	Vector3 vent = {1.0, 0.0, 0.0};  
+	Vector3 vent = {1.0, 0.0, 0.0};  */
 	
     /*Vector3 force_totale = calculer_force_totale(k, deformation, viscosite, rayon, vitesse, masse, vent);
 
