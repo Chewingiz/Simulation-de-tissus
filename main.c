@@ -1,4 +1,4 @@
-#include "structs.h"
+#include "forces.h"
 
 void maj_position(Poids *tableau, int taille_x){
     for(int i = 0; i < taille_x; i++) {
@@ -33,15 +33,17 @@ void maj_vitesses(Poids * tableau, int taille_x){
         maj_vitesse(&tableau[i], force);
     }
 }
+
+
 /*p1->p2*/
-Vector3 deformation(Poids p1, Poids p2){
+/*Vector3 deformation(Poids p1, Poids p2){
     Vector3 def;
     def.x = p2.position.x - p1.position.x;
     def.y = p2.position.y - p1.position.y;
     def.z = p2.position.z - p1.position.z;
     
     return def;
-}
+}*/
 
 int main() {
     int x = 5;

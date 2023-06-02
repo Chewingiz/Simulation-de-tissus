@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "structs.h"
+#include "forces.h"
 
 /*#define g 9.800908285 // constante gravitationnelle
 
@@ -70,14 +70,6 @@ void tables_forces_ressorts(Poids* tableau_poids, int** tableau_ressorts, int ta
         tableau_forces_total_appliquer_sur_les_points_R[ressort[1]] = nouvelle_force_P2;
     }
 }
-/*
-Vector3 f_rappel(float k, Vector3 deformation) {
-    Vector3 force_rappel;
-    force_rappel.x = -k * deformation.x;
-    force_rappel.y = -k * deformation.y;
-    force_rappel.z = -k * deformation.z;
-    return force_rappel;
-}*/
 
 /*       Forces extérieures      */
 /*Calcul de la force de frottement du fluide en Newton.
@@ -105,48 +97,7 @@ Vector3 f_pesanteur(float masse) {
     force_pesanteur.z = -masse * g;
     return force_pesanteur;
 }
+//force_totales;
 
-/* Calcul de la force totale */
-//Vector3 * calculer_
-/*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/
-
-void calculer_forces_totale(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k) {
-    int i;
-    float force_pesanteur,;
-    Vector3* force_totales;
-    Vector3 force_resist, force_tmp;
-    force_totales = malloc(sizeof(Vector3)*taille_tableau_poids); // créé dehors pour ne pas oublier de free ou mettre à jours les vitesses ici pour ne pas avoir à iterer deux fois sur la liste 
-
-    tables_forces_ressorts(tableau_poids, tableau_ressorts, taille_tableau_ressorts, k, longueur_ressort_repos, force_totales);
-    //Calcul de la force + application résistance
-    force_pesanteur = -tableau_poids[i].masse * g;
-    for (i = 0;i < taille_tableau_poids;i++){
-        force_resist = f_resist(viscosite, rayon, tableau_poids[i].vitesse_instantanee);// vitesse précédente
-        //force_pesanteur = f_pesanteur(tableau_poids[i].masse);// La masse est constante donc je ne le fait qu'une fois(en cas de masses différentes, le faire dans la boucle)
-        force_resist.z += force_pesanteur;
-        force_tmp = add(force_resist + autres_forces);
-        force_totales[i] = add(force_tmp, force_totales[i]);
-    }
-    free(force_totales);
-    //return force_totales;
-}
-/*ne pas oublier de tester si les ressorts relie des poids existant au chargement du  model (voir si chaque points sont < à taille tableau poids)
+/*ne pas oublier de tester si les ressorts relient des poids existant au chargement du  model (voir si chaque points sont < à taille tableau poids)
 tester si la liste de poids n'est pas vide */
-
-int main(void) {
-    // Test
-    /*float k = 10.0;                 // Constante de rappel
-    Vector3 deformation = {1.0, 2.0, 3.0};    // Déformation en x, y, z
-    float viscosite = 0.8;          // Viscosité du fluide
-    float rayon = 0.1;              // Rayon de la boule
-    Vector3 vitesse = {2.0, 1.0, 3.0};        // Vitesse en x, y, z
-    float masse = 1.5;              // Masse de l'objet
-	Vector3 vent = {1.0, 0.0, 0.0};  */
-	
-    /*Vector3 force_totale = calculer_force_totale(k, deformation, viscosite, rayon, vitesse, masse, vent);
-
-    printf("Force totale : [%f, %f, %f]\n", force_totale.x, force_totale.y, force_totale.z);*/
-
-    return 0;
-}
-
