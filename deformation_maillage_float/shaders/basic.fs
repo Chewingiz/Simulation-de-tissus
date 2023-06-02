@@ -1,20 +1,10 @@
-/*!\file basic.fs
- *
- * \brief fragment shader basique qui applique une couleur mélangée
- * avec la texture.
- * \author Farès BELHADJ, amsi@up8.edu
- * \date February 06 2023
- */
-/* Version GLSL 3.30 */
 #version 330
-/* Le fragment shader est directement en relation avec les sorties du vertex shader */
+
 in float vsoIL; /* Gouraud */
 in vec3 vsoNormal;
 in vec4 vsoModPos;
 
-/* Le fragment shader est directement en relation avec les sorties du vertex shader */
 in  vec2 vsoTexCoord;
-/* sortie du frament shader : une couleur */
 out vec4 fragColor;
 
 uniform sampler2D myTex;
