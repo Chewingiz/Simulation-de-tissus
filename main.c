@@ -72,13 +72,26 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 }*/
 
 int main() {
+    Poids * tableau;
+    Vector3 * tableau_position_poids_fixe;// de taille taille_tableau_index_poids_fixe
+    int * tableau_index_poids_fixe;
+    int taille_tableau, i, taille_tableau_index_poids_fixe;
+    
+    /*Pour concerver les positions initial des poids qui seront fixe durant la simulation*/
+    /*for(i=0; i<taille_tableau_index_poids_fixe; i++){
+        if(tableau_index_poids_fixe[i]<taille_tableau){
+            tableau_index_poids_fixe[i] = tableau[i].position;
+        }else{
+            printf("Erreur de modèle : le poids fixe à la position %d n'existe pas dans le modèle.", i);
+        }
+    }*/
 
     int x = 5;
     //int y = 5;
     //Ressorts R;
     //R.longueur = 3;
     //Poids P;
-    Poids * tableau;
+    
     tableau = init_tableau_exemple(x , 2.3) ;
     afficher_positions_tableau(tableau, x);
     printf("\n");
