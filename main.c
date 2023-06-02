@@ -35,6 +35,30 @@ void maj_vitesses(Poids * tableau, int taille_x){
 }
 
 
+
+/* Calcul de la force totale */
+//Vector3 * calculer_
+/*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/
+
+void calculer_forces_totale(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k) {
+    int i;
+    float force_pesanteur;
+    Vector3* force_totales;
+    Vector3 force_resist, force_tmp;
+    force_totales = malloc(sizeof(Vector3)*taille_tableau_poids); // créé dehors pour ne pas oublier de free ou mettre à jours les vitesses ici pour ne pas avoir à iterer deux fois sur la liste 
+
+    tables_forces_ressorts(tableau_poids, tableau_ressorts, taille_tableau_ressorts, k, longueur_ressort_repos, force_totales);
+    force_pesanteur = -tableau_poids[0].masse * g;
+    for (i = 0;i < taille_tableau_poids;i++){
+        force_resist = f_resist(viscosite, rayon, tableau_poids[i].vitesse_instantanee);// vitesse précédente
+        //force_pesanteur = f_pesanteur(tableau_poids[i].masse);// La masse est constante donc je ne le fait qu'une fois(en cas de masses différentes, le faire dans la boucle)
+        force_resist.z += force_pesanteur;
+        force_tmp = add(force_resist, autres_forces);
+        force_totales[i] = add(force_tmp, force_totales[i]);
+        maj_vitesse(&tableau_poids[i], force_totales[i]);
+    }
+    free(force_totales);
+}
 /*p1->p2*/
 /*Vector3 deformation(Poids p1, Poids p2){
     Vector3 def;
