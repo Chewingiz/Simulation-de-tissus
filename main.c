@@ -40,7 +40,7 @@ void maj_vitesses(Poids * tableau, int taille_x){
 //Vector3 * calculer_
 /*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/
 
-void calculer_forces_totale(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k) {
+void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k) {
     int i;
     float force_pesanteur;
     Vector3* force_totales;
@@ -55,6 +55,8 @@ void calculer_forces_totale(Poids* tableau_poids, int taille_tableau_poids, int*
         force_resist.z += force_pesanteur;
         force_tmp = add(force_resist, autres_forces);
         force_totales[i] = add(force_tmp, force_totales[i]);
+
+        //Mise à jours des vitesses pour ne pas àvoir à iterer une seconde fois sur la liste
         maj_vitesse(&tableau_poids[i], force_totales[i]);
     }
     free(force_totales);
@@ -70,6 +72,7 @@ void calculer_forces_totale(Poids* tableau_poids, int taille_tableau_poids, int*
 }*/
 
 int main() {
+
     int x = 5;
     //int y = 5;
     //Ressorts R;
