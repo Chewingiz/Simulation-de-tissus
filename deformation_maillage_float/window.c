@@ -64,7 +64,7 @@ Vector3** init_table(int rows, int cols) {
           if (i>5){data[i][j].y = 1.f;}
       }
   }
-
+	data[9][0].y= 3; 
     return data;
 }
 
@@ -90,6 +90,8 @@ GLuint createVertexTexture(Vector3** data, int width, int height) {
 // Étape 3 : Configuration des paramètres de texture
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des x
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des y
 
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, flattenedData);
