@@ -7,11 +7,13 @@ forces.o : forces.c forces.h
 	
 main : structs.o forces.o main.c
 	gcc -Wall -Wextra -Wpedantic main.c structs.o forces.o -o simulation -lm
+models : models.c
+	gcc -o models models.c lib/cJSON.c
 
 test : structs.c main.c
 	gcc -Wall -Wextra -Wpedantic -c structs.c
 	gcc -Wall -Wextra -Wpedantic -c main.c
 	gcc structs.o main.o -o simulation
 clean : 
-	rm simulation  *.o
+	rm simulation models *.o
 	
