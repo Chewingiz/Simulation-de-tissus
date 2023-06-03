@@ -42,13 +42,21 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
 }
 
 
-Vector3 add(Vector3 a, Vector3 b){
+Vector3 add_sub(Vector3 a, Vector3 b, int choix){
     Vector3 res;
-    res.x = a.x + b.x;
-    res.y = a.y + b.y;
-    res.z = a.z + b.z;
+    if(choix == 1) {
+        res.x = a.x + b.x;
+        res.y = a.y + b.y;
+        res.z = a.z + b.z;
+    }
+    else if(choix == 2) {
+        res.x = a.x - b.x;
+        res.y = a.y - b.y;
+        res.z = a.z - b.z;
+    }
     return res;
 }
+
 Vector3 sub(Vector3 a, Vector3 b){
     Vector3 res;
     res.x = a.x - b.x;
@@ -57,15 +65,15 @@ Vector3 sub(Vector3 a, Vector3 b){
     return res;
 }
 
-void tables_forces_ressorts(Poids* tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
+void tables_forces_ressorts(Poids* tableau_poids, int tableau_ressorts[][2], int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
     int i;
     int* ressort;
     Vector3 resultat_calcul_force, nouvelle_force_P1, nouvelle_force_P2;
     for(i = 0; i < taille_tableau_ressorts; i++) {
         ressort = tableau_ressorts[i];
         resultat_calcul_force = calculs_ressort(tableau_poids[ressort[0]].position, tableau_poids[ressort[1]].position, k, longueur_ressort_repos);
-        nouvelle_force_P1 = add(tableau_forces_total_appliquer_sur_les_points_R[ressort[0]], resultat_calcul_force);
-        nouvelle_force_P2 = sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[1]], resultat_calcul_force);
+        nouvelle_force_P1 = add_sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[0]], resultat_calcul_force, 1);
+        nouvelle_force_P2 = add_sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[1]], resultat_calcul_force, 2);
         tableau_forces_total_appliquer_sur_les_points_R[ressort[0]] = nouvelle_force_P1;
         tableau_forces_total_appliquer_sur_les_points_R[ressort[1]] = nouvelle_force_P2;
     }

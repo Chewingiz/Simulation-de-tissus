@@ -40,7 +40,7 @@ void maj_vitesses(Poids * tableau, int taille_x){
 //Vector3 * calculer_
 /*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/
 
-void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k) {
+void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tableau_poids, int tableau_ressorts[][2], int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k) {
     int i;
     float force_pesanteur;
     Vector3* force_totales;
@@ -53,8 +53,8 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
         force_resist = f_resist(viscosite, rayon, tableau_poids[i].vitesse_instantanee);// vitesse précédente
         //force_pesanteur = f_pesanteur(tableau_poids[i].masse);// La masse est constante donc je ne le fait qu'une fois(en cas de masses différentes, le faire dans la boucle)
         force_resist.z += force_pesanteur;
-        force_tmp = add(force_resist, autres_forces);
-        force_totales[i] = add(force_tmp, force_totales[i]);
+        force_tmp = add_sub(force_resist, autres_forces, 1);
+        force_totales[i] = add_sub(force_tmp, force_totales[i], 1);
 
         //Mise à jours des vitesses pour ne pas àvoir à iterer une seconde fois sur la liste
         maj_vitesse(&tableau_poids[i], force_totales[i]);
@@ -72,11 +72,11 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 }*/
 
 int main() {
-    Poids * tableau;
+    /*Poids * tableau;
     Vector3 * tableau_position_poids_fixes;// de taille taille_tableau_index_poids_fixes
     int * tableau_index_poids_fixes;
     int taille_tableau, i, taille_tableau_index_poids_fixes;
-    float temps_total_simulation = 10.5, t ;
+    float temps_total_simulation = 10.5, t ;*/
     
     /*Pour concerver les positions initial des poids qui seront fixes durant la simulation*/
     /*for(i=0; i<taille_tableau_index_poids_fixes; i++){
@@ -85,17 +85,17 @@ int main() {
         }else{
             printf("Erreur de modèle : le poids fixes à la position %d n'existe pas dans le modèle.", i);
         }
-    }*/
+    }
 
-    int x = 5;
+    int x = 5;*/
 
     /*Boucle principale*/
-    for(t = 0; t <= temps_total_simulation; t+=DT){
+    //for(t = 0; t <= temps_total_simulation; t+=DT){
         // maj vitesses
         //calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k);
 
         // maj positions
-        maj_positions(tableau, taille_tableau);
+        //maj_positions(tableau, taille_tableau);
 
         //réinitialisation des positions des points fixes.
         /*for(i=0; i<taille_tableau_index_poids_fixes; i++){
@@ -103,12 +103,7 @@ int main() {
         }*/
     
         // affichage
-
-
-    }
-
-
-
+    //}
 
     //int y = 5;
     //Ressorts R;
@@ -124,5 +119,58 @@ int main() {
     maj_vitesses(tableau, x);
     printf("\n");
     afficher_vitesse_tableau(tableau, x);*/
+
+    Poids * tableau;
+    int x = 9;
+    Ressorts R;
+    R.longueur = 3;
+    //int tableau_ressorts[12];
+    int taille_tableau_ressorts = 12;
+    //tableau_ressorts = (int*)malloc(taille_tableau_ressorts * sizeof(int));
+    int tableau_ressorts[12][2] = {{0, 1}, {1, 2}, 
+                                {3, 4}, {4, 5}, 
+                                {6, 7}, {7, 8}, 
+                                {0, 3}, {3, 6}, 
+                                {1, 4}, {4, 7}, 
+                                {2, 5}, {5, 8}};
+    int k = 15;
+    Vector3 vent;
+    vent.x = 0;
+    vent.y = 0;
+    vent.z = 0;
+    tableau = init_tableau_exemple(x, R.longueur);
+    /*afficher_positions_tableau(tableau, x);
+    printf("\n\n");
+    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 5, 3, vent, k);
+    afficher_positions_tableau(tableau, x);
+    printf("\n\n");
+    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 5, 3, vent, k);
+    afficher_positions_tableau(tableau, x);
+    printf("\n\n");*/
+    //afficher_positions_tableau(tableau, x);
+    /*printf("\n\n");
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            tableau_ressorts[i][j] = 1;
+            printf("%d", tableau_ressorts[i][j]);
+        }
+        printf("\n");
+    }*/
+    afficher_positions_tableau(tableau, x);
+    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
+    /*for(int i = 0; i < taille_tableau_ressorts; i++) {
+        for(int j = 0; j < 2; j++) {
+            printf("%d  ", tableau_ressorts[i][j]);
+        }
+        printf("\n");
+    }*/
+    printf("\n\n");
+    afficher_vitesse_tableau(tableau, x);
+    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
+    printf("\n\n");
+    afficher_positions_tableau(tableau, x);
+    printf("\n\n");
+    afficher_vitesse_tableau(tableau, x);
+    printf("\n\n");
     return 0;
 }
