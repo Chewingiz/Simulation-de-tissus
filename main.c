@@ -157,15 +157,12 @@ int main() {
         printf("\n");
     }*/
     afficher_positions_tableau(tableau, x);
-    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
-    /*for(int i = 0; i < taille_tableau_ressorts; i++) {
-        for(int j = 0; j < 2; j++) {
-            printf("%d  ", tableau_ressorts[i][j]);
-        }
-        printf("\n");
-    }*/
     printf("\n\n");
     afficher_vitesse_tableau(tableau, x);
+    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
+    printf("\n\n");
+    afficher_vitesse_tableau(tableau, x);
+    printf("\n\n");
     calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
     printf("\n\n");
     afficher_positions_tableau(tableau, x);
