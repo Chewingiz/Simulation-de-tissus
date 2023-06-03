@@ -44,7 +44,7 @@ Vector3 * mycalloc(int taille_tableau_poids) {
     Vector3 * a;
     a = calloc(taille_tableau_poids,sizeof(Vector3));
     if(a == NULL) {
-        printf("Erreur\n");
+        printf("Erreur calloc\n");
         exit(1);
     }
     return a;
@@ -54,7 +54,7 @@ Vector3 * mymalloc(int taille_tableau_poids) {
     Vector3 * a;
     a = malloc(sizeof(Vector3)*taille_tableau_poids);
     if(a == NULL) {
-        printf("Erreur\n");
+        printf("Erreur malloc\n");
         exit(1);
     }
     return a;
