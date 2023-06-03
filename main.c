@@ -73,8 +73,8 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
         force_resist = f_resist(viscosite, rayon, tableau_poids[i].vitesse_instantanee);// vitesse précédente
         //force_pesanteur = f_pesanteur(tableau_poids[i].masse);// La masse est constante donc je ne le fait qu'une fois(en cas de masses différentes, le faire dans la boucle)
         force_resist.z += force_pesanteur;
-        force_tmp = add_sub(force_resist, autres_forces, 1);
-        force_totales[i] = add_sub(force_tmp, force_totales[i], 1);
+        force_tmp = add(force_resist, autres_forces);
+        force_totales[i] = add(force_tmp, force_totales[i]);
 
         //Mise à jours des vitesses pour ne pas àvoir à iterer une seconde fois sur la liste
         maj_vitesse(&tableau_poids[i], force_totales[i]);
@@ -100,7 +100,7 @@ int main() {
                                 {0, 3}, {3, 6}, 
                                 {1, 4}, {4, 7}, 
                                 {2, 5}, {5, 8}};
-    int k = 15;
+    int k = 20;
     Vector3 vent;
     vent.x = 0;
     vent.y = 0;
