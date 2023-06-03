@@ -83,69 +83,14 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 }
 
 
-/*p1->p2*/
-/*Vector3 deformation(Poids p1, Poids p2){
-    Vector3 def;
-    def.x = p2.position.x - p1.position.x;
-    def.y = p2.position.y - p1.position.y;
-    def.z = p2.position.z - p1.position.z;
-    
-    return def;
-}*/
+
 
 int main() {
-    /*Poids * tableau;
-    Vector3 * tableau_position_poids_fixes;// de taille taille_tableau_index_poids_fixes
-    int * tableau_index_poids_fixes;
-    int taille_tableau, i, taille_tableau_index_poids_fixes;
-    float temps_total_simulation = 10.5, t ;*/
-    
-    /*Pour concerver les positions initial des poids qui seront fixes durant la simulation*/
-    /*for(i=0; i<taille_tableau_index_poids_fixes; i++){
-        if(tableau_index_poids_fixes[i]<taille_tableau){
-            tableau_index_poids_fixes[i] = tableau[i].position;
-        }else{
-            printf("Erreur de modèle : le poids fixes à la position %d n'existe pas dans le modèle.", i);
-        }
-    }
-
-    int x = 5;*/
-
-    /*Boucle principale*/
-    //for(t = 0; t <= temps_total_simulation; t+=DT){
-        // maj vitesses
-        //calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts,float longueur_ressort_repos, float viscosite, float rayon, Vector3 autres_forces, float k);
-
-        // maj positions
-        //maj_positions(tableau, taille_tableau);
-
-        //réinitialisation des positions des points fixes.
-        /*for(i=0; i<taille_tableau_index_poids_fixes; i++){
-            tableau[tableau_index_poids_fixes[i]].position = tableau_position_poids_fixe[i];
-        }*/
-    
-        // affichage
-    //}
-
-    //int y = 5;
-    //Ressorts R;
-    //R.longueur = 3;
-    //Poids P;
-    
-    /*tableau = init_tableau_exemple(x , 2.3) ;
-    afficher_positions_tableau(tableau, x);
-    printf("\n");
-
-    afficher_vitesse_tableau(tableau, x);
-    //tableau = poids(x, y, R.longueur, P); 
-    maj_vitesses(tableau, x);
-    printf("\n");
-    afficher_vitesse_tableau(tableau, x);*/
-
     Poids * tableau;
-    int x = 9;
+    int taille_tableau = 9,i;
     Ressorts R;
     R.longueur = 3;
+    float t;
     //int tableau_ressorts[12];
     int taille_tableau_ressorts = 12;
     //tableau_ressorts = (int*)malloc(taille_tableau_ressorts * sizeof(int));
@@ -160,36 +105,54 @@ int main() {
     vent.x = 0;
     vent.y = 0;
     vent.z = 0;
-    tableau = init_tableau_exemple(x, R.longueur);
-    /*afficher_positions_tableau(tableau, x);
-    printf("\n\n");
-    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 5, 3, vent, k);
-    afficher_positions_tableau(tableau, x);
-    printf("\n\n");
-    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 5, 3, vent, k);
-    afficher_positions_tableau(tableau, x);
-    printf("\n\n");*/
-    //afficher_positions_tableau(tableau, x);
-    /*printf("\n\n");
-    for(int i = 0; i < 3; i++) {
-        for(int j = 0; j < 3; j++) {
-            tableau_ressorts[i][j] = 1;
-            printf("%d", tableau_ressorts[i][j]);
+    tableau = init_tableau_exemple(taille_tableau, R.longueur);
+    float temps_total_simulation = 1;// en secondes
+
+    int taille_tableau_index_poids_fixes = 2;
+    int tableau_index_poids_fixes[2]= {0,1};
+    Vector3 * tableau_position_poids_fixes;// de taille taille_tableau_index_poids_fixes
+    tableau_position_poids_fixes = mymalloc(taille_tableau_index_poids_fixes);
+    for(i = 0;i<taille_tableau_index_poids_fixes;i++){ // recuperation de toutes les positions des poids fixes
+        if(tableau_index_poids_fixes[i]<taille_tableau){
+            tableau_position_poids_fixes[i] = tableau[tableau_index_poids_fixes[i]].position;
+        }else{
+            printf("Erreur de modèle : le poids fixes à la position %d n'existe pas dans le modèle.", i);
         }
+    }
+    printf("Positions initiale :\n");
+    afficher_positions_tableau(tableau, taille_tableau);
+    printf("\n\n");
+    afficher_positions_tableau(tableau, taille_tableau);
+    printf("\n");
+    for(t = 0; t <= temps_total_simulation; t+=DT){
+        // maj vitesses
+        printf("Vitesses :\n");
+        calculer_forces_totale_maj_vitesses(tableau, taille_tableau, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
+        afficher_vitesse_tableau(tableau, taille_tableau);
         printf("\n");
-    }*/
-    afficher_positions_tableau(tableau, x);
-    printf("\n\n");
-    afficher_vitesse_tableau(tableau, x);
-    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
-    printf("\n\n");
-    afficher_vitesse_tableau(tableau, x);
-    printf("\n\n");
-    calculer_forces_totale_maj_vitesses(tableau, x, tableau_ressorts, taille_tableau_ressorts, R.longueur, 5, 3, vent, k);
-    printf("\n\n");
-    afficher_positions_tableau(tableau, x);
-    printf("\n\n");
-    afficher_vitesse_tableau(tableau, x);
-    printf("\n\n");
+
+        // maj positions
+        maj_positions(tableau, taille_tableau);
+
+        printf("Position avant reinit :\n");
+        afficher_positions_tableau(tableau, taille_tableau);
+        printf("\n");
+
+        //réinitialisation des positions des points fixes.
+        for(i=0; i<taille_tableau_index_poids_fixes; i++){
+            printf("OK\n");
+            tableau[tableau_index_poids_fixes[i]].position = tableau_position_poids_fixes[i];
+            printf("%f\n",tableau[tableau_index_poids_fixes[i]].position.x);
+        }
+
+        printf("Position finale :\n");
+        afficher_positions_tableau(tableau, taille_tableau);
+        // affichage
+        printf("\n\n");
+    }
+
+    free(tableau_position_poids_fixes);
+    free(tableau);
     return 0;
 }
+
