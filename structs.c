@@ -3,16 +3,17 @@
 /*longueure ressort*/
 Poids* init_tableau_exemple(int x, float longueur) {
     Poids* tableau_poids = malloc(sizeof(Poids)*x);
-    Vector3 vitesse;
-    vitesse.x = 0.0; vitesse.y = 0.0; vitesse.z = 0.0;
 
     for (int i = 0; i < x; i++) {
+        Vector3 vitesse;
+        vitesse.x = 0.0; vitesse.y = 0.0; vitesse.z = 0.0;
+
         tableau_poids[i].position.x = i * longueur;
         tableau_poids[i].position.y = i * longueur;
         tableau_poids[i].position.z = 0;
             
         tableau_poids[i].vitesse_instantanee = vitesse ;
-        tableau_poids[i].masse = 5 ;
+        tableau_poids[i].masse = 0.5 ;
     }
     return tableau_poids;
 }

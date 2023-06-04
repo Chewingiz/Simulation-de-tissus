@@ -65,9 +65,12 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
     float force_pesanteur;
     Vector3* force_totales;
     Vector3 force_resist, force_tmp;
-    force_totales = mycalloc(taille_tableau_poids); // créé dehors pour ne pas oublier de free ou mettre à jours les vitesses ici pour ne pas avoir à iterer deux fois sur la liste 
+    force_totales = mycalloc(taille_tableau_poids); 
 
     tables_forces_ressorts(tableau_poids, tableau_ressorts, taille_tableau_ressorts, k, longueur_ressort_repos, force_totales);
+    for (i = 0;i < taille_tableau_poids;i++){
+    printf("\n forces tab =[%f,%f,%f]\n",force_totales[i].x,force_totales[i].y,force_totales[i].z );
+    }
     force_pesanteur = -tableau_poids[0].masse * g;
     for (i = 0;i < taille_tableau_poids;i++){
         force_resist = f_resist(viscosite, rayon, tableau_poids[i].vitesse_instantanee);// vitesse précédente
@@ -86,8 +89,72 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 
 
 int main() {
+    // Exemple de données de test
+    int taille_tableau_poids = 4;
+    Poids tableau_poids[taille_tableau_poids];
+    int tableau_ressorts[4][2] = {{0, 1},{0, 2},{1, 3},{2, 3}};
+    int taille_tableau_ressorts = 4;
+    float longueur_ressort_repos = 1.0;
+    float viscosite = 0.5;
+    float rayon = 0.1;
+    Vector3 autres_forces = {0.0, 0.0, 0.0};
+    float k = 100.0;
+
+    // Initialisation des valeurs des poids
+    tableau_poids[0].position.x = 0.0;
+    tableau_poids[0].position.y = 0.0;
+    tableau_poids[0].position.z = 1.0;
+    tableau_poids[0].masse = 1.0;
+    tableau_poids[0].vitesse_instantanee.x = 0.0;
+    tableau_poids[0].vitesse_instantanee.y = 0.0;
+    tableau_poids[0].vitesse_instantanee.z = 0.0;
+
+    tableau_poids[1].position.x = 1.0;
+    tableau_poids[1].position.y = 0.0;
+    tableau_poids[1].position.z = 1.0;
+    tableau_poids[1].masse = 0.5;
+    tableau_poids[1].vitesse_instantanee.x = 0.0;
+    tableau_poids[1].vitesse_instantanee.y = 0.0;
+    tableau_poids[1].vitesse_instantanee.z = 0.0;
+
+    tableau_poids[2].position.x = 0.0;
+    tableau_poids[2].position.y = 0.0;
+    tableau_poids[2].position.z = 0.0;
+    tableau_poids[2].masse = 0.5;
+    tableau_poids[2].vitesse_instantanee.x = 0.0;
+    tableau_poids[2].vitesse_instantanee.y = 0.0;
+    tableau_poids[2].vitesse_instantanee.z = 0.0;
+
+    tableau_poids[3].position.x = 1.0;
+    tableau_poids[3].position.y = 0.0;
+    tableau_poids[3].position.z = 0.0;
+    tableau_poids[3].masse = 0.5;
+    tableau_poids[3].vitesse_instantanee.x = 0.0;
+    tableau_poids[3].vitesse_instantanee.y = 0.0;
+    tableau_poids[3].vitesse_instantanee.z = 0.0;
+
+    // Appel de la fonction calculer_forces_totale_maj_vitesses
+    for(int i=0 ; i < 100;i++){
+
+    calculer_forces_totale_maj_vitesses(tableau_poids, taille_tableau_poids, tableau_ressorts, taille_tableau_ressorts, longueur_ressort_repos, viscosite, rayon, autres_forces, k);
+
+    // Affichage des résultats après l'appel de la fonction
+    for (int i = 0; i < taille_tableau_poids; i++) {
+        printf("Poids %d : vitesse = (%f, %f, %f)\n", i, tableau_poids[i].vitesse_instantanee.x, tableau_poids[i].vitesse_instantanee.y, tableau_poids[i].vitesse_instantanee.z);
+    }
+    maj_positions(tableau_poids, 2);
     
-    Vector3 pa = {0.0, 0.0, 0.0};
+
+    tableau_poids[0].position.x = 0.0;
+    tableau_poids[0].position.y = 0.0;
+    tableau_poids[0].position.z = 1.0;
+    tableau_poids[1].vitesse_instantanee.x = 0.0;
+    afficher_positions_tableau(tableau_poids, 4);
+    //afficher_positions_tableau(tableau_poids, 2);
+    }
+
+
+   /* Vector3 pa = {0.0, 0.0, 0.0};
     Vector3 pb = {1.0, 1.0, 1.0};
     float k = 1.0;
     float length_rest = 0.5;
@@ -141,8 +208,8 @@ int main() {
     float mass = 1.0;
     Vector3 gravity_force = f_pesanteur(mass);
     printf("Gravitational force: (%f, %f, %f)\n", gravity_force.x, gravity_force.y, gravity_force.z);
-
-    /*Poids * tableau;
+*/
+   /* Poids * tableau;
     int taille_tableau = 9,i;
     Ressorts R;
     R.longueur = 3;
@@ -156,7 +223,7 @@ int main() {
                                 {0, 3}, {3, 6}, 
                                 {1, 4}, {4, 7}, 
                                 {2, 5}, {5, 8}};
-    int k = 20;
+    int k = 100;
     Vector3 vent;
     vent.x = 0;
     vent.y = 0;
@@ -183,7 +250,7 @@ int main() {
     for(t = 0; t <= temps_total_simulation; t+=DT){
         // maj vitesses
         printf("Vitesses :\n");
-        calculer_forces_totale_maj_vitesses(tableau, taille_tableau, tableau_ressorts, taille_tableau_ressorts, R.longueur, 10, 3, vent, k);
+        calculer_forces_totale_maj_vitesses(tableau, taille_tableau, tableau_ressorts, taille_tableau_ressorts, R.longueur, 0.5, 0.1, vent, k);
         afficher_vitesse_tableau(tableau, taille_tableau);
         printf("\n");
 

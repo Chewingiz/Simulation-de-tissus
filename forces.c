@@ -18,7 +18,7 @@ x : le d ́eformation en mètre (m).
 */
 
 Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_repos) {
-       Vector3 direction;
+    Vector3 direction;
     Vector3 direction_normalisee;
     Vector3 force;
 
@@ -26,16 +26,26 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
     direction.y = Pb.y - Pa.y;
     direction.z = Pb.z - Pa.z;
 
-    float distance = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z); // distance euclidienne 
+    float distance = sqrt(fabs(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z)); // distance euclidienne 
+    
+    if (distance == 0) {
+        //printf("\nDIV PAR 0\n");
+        direction_normalisee.x = 0.0;
+        direction_normalisee.y = 0.0;
+        direction_normalisee.z = 0.0;
+        force.x = 0.0;
+        force.y = 0.0;
+        force.z = 0.0;
+    } else {
+        direction_normalisee.x = direction.x / distance;
+        direction_normalisee.y = direction.y / distance;
+        direction_normalisee.z = direction.z / distance;
 
-    direction_normalisee.x = direction.x / distance;
-    direction_normalisee.y = direction.y / distance;
-    direction_normalisee.z = direction.z / distance;
-
-    float kld = k * (distance - longueur_ressort_repos);
-    force.x = direction_normalisee.x * kld;
-    force.y = direction_normalisee.y * kld;
-    force.z = direction_normalisee.z * kld;
+        float kld = k * (distance - longueur_ressort_repos);
+        force.x = direction_normalisee.x * kld;
+        force.y = direction_normalisee.y * kld;
+        force.z = direction_normalisee.z * kld;
+    }
 
     return force;
 }
@@ -64,6 +74,7 @@ void tables_forces_ressorts(Poids* tableau_poids, int tableau_ressorts[][2], int
     for(i = 0; i < taille_tableau_ressorts; i++) {
         ressort = tableau_ressorts[i];
         resultat_calcul_force = calculs_ressort(tableau_poids[ressort[0]].position, tableau_poids[ressort[1]].position, k, longueur_ressort_repos);
+        
         nouvelle_force_P1 = add(tableau_forces_total_appliquer_sur_les_points_R[ressort[0]], resultat_calcul_force);
         nouvelle_force_P2 = sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[1]], resultat_calcul_force);
         tableau_forces_total_appliquer_sur_les_points_R[ressort[0]] = nouvelle_force_P1;
@@ -79,7 +90,7 @@ v : vitesse de la boule en m`etre par seconde (m.s−1)
 */
 Vector3 f_resist(float viscosite, float rayon, Vector3 vitesse) {
     Vector3 force_resist;
-    float constante = 6 * M_PI * viscosite * rayon;
+    float constante = -6 * M_PI * viscosite * rayon;
     force_resist.x = constante * vitesse.x;
     force_resist.y = constante * vitesse.y;
     force_resist.z = constante * vitesse.z;
