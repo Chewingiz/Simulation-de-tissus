@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef float A;
-#define DT 0.1 // intervale de temps entre les images 
+#define DT 0.001 // intervale de temps entre les images 
 #define g 9.800908285 // constante gravitationnelle
 
 typedef struct {
@@ -20,7 +20,7 @@ typedef struct {
 typedef struct {
     A force_rappel;
     A constante_rappel;
-    int longueur;
+    float longueur;
 } Ressorts;
 
 typedef struct {

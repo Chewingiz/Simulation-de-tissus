@@ -90,7 +90,7 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 
 int main() {
     // Exemple de données de test
-    int taille_tableau_poids = 4;
+    /*int taille_tableau_poids = 4;
     Poids tableau_poids[taille_tableau_poids];
     int tableau_ressorts[4][2] = {{0, 1},{0, 2},{1, 3},{2, 3}};
     int taille_tableau_ressorts = 4;
@@ -142,7 +142,7 @@ int main() {
     for (int i = 0; i < taille_tableau_poids; i++) {
         printf("Poids %d : vitesse = (%f, %f, %f)\n", i, tableau_poids[i].vitesse_instantanee.x, tableau_poids[i].vitesse_instantanee.y, tableau_poids[i].vitesse_instantanee.z);
     }
-    maj_positions(tableau_poids, 2);
+    maj_positions(tableau_poids, 4);
     
 
     tableau_poids[0].position.x = 0.0;
@@ -151,7 +151,7 @@ int main() {
     tableau_poids[1].vitesse_instantanee.x = 0.0;
     afficher_positions_tableau(tableau_poids, 4);
     //afficher_positions_tableau(tableau_poids, 2);
-    }
+    }*/
 
 
    /* Vector3 pa = {0.0, 0.0, 0.0};
@@ -209,26 +209,26 @@ int main() {
     Vector3 gravity_force = f_pesanteur(mass);
     printf("Gravitational force: (%f, %f, %f)\n", gravity_force.x, gravity_force.y, gravity_force.z);
 */
-   /* Poids * tableau;
+    Poids * tableau;
     int taille_tableau = 9,i;
-    Ressorts R;
-    R.longueur = 3;
-    float t;
-    //int tableau_ressorts[12];
-    int taille_tableau_ressorts = 12;
-    //tableau_ressorts = (int*)malloc(taille_tableau_ressorts * sizeof(int));
     int tableau_ressorts[12][2] = {{0, 1}, {1, 2}, 
                                 {3, 4}, {4, 5}, 
                                 {6, 7}, {7, 8}, 
                                 {0, 3}, {3, 6}, 
                                 {1, 4}, {4, 7}, 
                                 {2, 5}, {5, 8}};
-    int k = 100;
-    Vector3 vent;
-    vent.x = 0;
-    vent.y = 0;
-    vent.z = 0;
+    int taille_tableau_ressorts = 12;
+    Ressorts R;
+    R.longueur = 1.0;
+    float viscosite = 0.5;
+    float rayon = 0.1;
+    Vector3 vent = {0.0, 0.0, 0.0};
+    float k = 100.0;
+    //int tableau_ressorts[12];
+    //tableau_ressorts = (int*)malloc(taille_tableau_ressorts * sizeof(int));
+
     tableau = init_tableau_exemple(taille_tableau, R.longueur);
+    float t;
     float temps_total_simulation = 1;// en secondes
 
     int taille_tableau_index_poids_fixes = 2;
@@ -250,7 +250,7 @@ int main() {
     for(t = 0; t <= temps_total_simulation; t+=DT){
         // maj vitesses
         printf("Vitesses :\n");
-        calculer_forces_totale_maj_vitesses(tableau, taille_tableau, tableau_ressorts, taille_tableau_ressorts, R.longueur, 0.5, 0.1, vent, k);
+        calculer_forces_totale_maj_vitesses(tableau, taille_tableau, tableau_ressorts, taille_tableau_ressorts, R.longueur, viscosite, rayon, vent, k);
         afficher_vitesse_tableau(tableau, taille_tableau);
         printf("\n");
 
@@ -275,7 +275,7 @@ int main() {
     }
 
     free(tableau_position_poids_fixes);
-    free(tableau);*/
+    free(tableau);
     return 0;
 }
 

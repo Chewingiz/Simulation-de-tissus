@@ -50,7 +50,6 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
     return force;
 }
 
-
 Vector3 add(Vector3 a, Vector3 b){
     Vector3 res;
     res.x = a.x + b.x;
@@ -74,7 +73,6 @@ void tables_forces_ressorts(Poids* tableau_poids, int tableau_ressorts[][2], int
     for(i = 0; i < taille_tableau_ressorts; i++) {
         ressort = tableau_ressorts[i];
         resultat_calcul_force = calculs_ressort(tableau_poids[ressort[0]].position, tableau_poids[ressort[1]].position, k, longueur_ressort_repos);
-        
         nouvelle_force_P1 = add(tableau_forces_total_appliquer_sur_les_points_R[ressort[0]], resultat_calcul_force);
         nouvelle_force_P2 = sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[1]], resultat_calcul_force);
         tableau_forces_total_appliquer_sur_les_points_R[ressort[0]] = nouvelle_force_P1;
