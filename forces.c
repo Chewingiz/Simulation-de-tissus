@@ -26,17 +26,26 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
     direction.y = Pb.y - Pa.y;
     direction.z = Pb.z - Pa.z;
 
-    float distance = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z); // distance euclidienne 
+    float distance = sqrt(fabs(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z)); // distance euclidienne 
+    
+    if (distance == 0) {
+        //printf("\nDIV PAR 0\n");
+        direction_normalisee.x = 0.0;
+        direction_normalisee.y = 0.0;
+        direction_normalisee.z = 0.0;
+        force.x = 0.0;
+        force.y = 0.0;
+        force.z = 0.0;
+    } else {
+        direction_normalisee.x = direction.x / distance;
+        direction_normalisee.y = direction.y / distance;
+        direction_normalisee.z = direction.z / distance;
 
-    direction_normalisee.x = direction.x / distance;
-    direction_normalisee.y = direction.y / distance;
-    direction_normalisee.z = direction.z / distance;
-
-
-	float kld = k * (longueur_ressort_repos - distance);
-    force.x = (direction_normalisee.x / distance) * kld;
-    force.y = (direction_normalisee.y / distance) * kld;
-    force.z = (direction_normalisee.z / distance) * kld;
+        float kld = k * (distance - longueur_ressort_repos);
+        force.x = direction_normalisee.x * kld;
+        force.y = direction_normalisee.y * kld;
+        force.z = direction_normalisee.z * kld;
+    }
 
     return force;
 }
@@ -49,6 +58,7 @@ Vector3 add(Vector3 a, Vector3 b){
     res.z = a.z + b.z;
     return res;
 }
+
 Vector3 sub(Vector3 a, Vector3 b){
     Vector3 res;
     res.x = a.x - b.x;
@@ -57,13 +67,14 @@ Vector3 sub(Vector3 a, Vector3 b){
     return res;
 }
 
-void tables_forces_ressorts(Poids* tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
+void tables_forces_ressorts(Poids* tableau_poids, int tableau_ressorts[][2], int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
     int i;
     int* ressort;
     Vector3 resultat_calcul_force, nouvelle_force_P1, nouvelle_force_P2;
     for(i = 0; i < taille_tableau_ressorts; i++) {
         ressort = tableau_ressorts[i];
         resultat_calcul_force = calculs_ressort(tableau_poids[ressort[0]].position, tableau_poids[ressort[1]].position, k, longueur_ressort_repos);
+        
         nouvelle_force_P1 = add(tableau_forces_total_appliquer_sur_les_points_R[ressort[0]], resultat_calcul_force);
         nouvelle_force_P2 = sub(tableau_forces_total_appliquer_sur_les_points_R[ressort[1]], resultat_calcul_force);
         tableau_forces_total_appliquer_sur_les_points_R[ressort[0]] = nouvelle_force_P1;
