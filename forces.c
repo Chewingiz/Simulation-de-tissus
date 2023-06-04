@@ -18,7 +18,7 @@ x : le d ́eformation en mètre (m).
 */
 
 Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_repos) {
-    Vector3 direction;
+       Vector3 direction;
     Vector3 direction_normalisee;
     Vector3 force;
 
@@ -32,11 +32,10 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
     direction_normalisee.y = direction.y / distance;
     direction_normalisee.z = direction.z / distance;
 
-
-	float kld = k * (longueur_ressort_repos - distance);
-    force.x = (direction_normalisee.x / distance) * kld;
-    force.y = (direction_normalisee.y / distance) * kld;
-    force.z = (direction_normalisee.z / distance) * kld;
+    float kld = k * (distance - longueur_ressort_repos);
+    force.x = direction_normalisee.x * kld;
+    force.y = direction_normalisee.y * kld;
+    force.z = direction_normalisee.z * kld;
 
     return force;
 }
@@ -80,7 +79,7 @@ v : vitesse de la boule en m`etre par seconde (m.s−1)
 */
 Vector3 f_resist(float viscosite, float rayon, Vector3 vitesse) {
     Vector3 force_resist;
-    float constante = -6 * M_PI * viscosite * rayon;
+    float constante = 6 * M_PI * viscosite * rayon;
     force_resist.x = constante * vitesse.x;
     force_resist.y = constante * vitesse.y;
     force_resist.z = constante * vitesse.z;

@@ -86,7 +86,63 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 
 
 int main() {
-    Poids * tableau;
+    
+    Vector3 pa = {0.0, 0.0, 0.0};
+    Vector3 pb = {1.0, 1.0, 1.0};
+    float k = 1.0;
+    float length_rest = 0.5;
+    Vector3 spring_force = calculs_ressort(pa, pb, k, length_rest);
+    printf("Spring force: (%f, %f, %f) \n", spring_force.x, spring_force.y, spring_force.z);
+
+    // Test the vector addition function
+    Vector3 a = {1.0, 2.0, 3.0};
+    Vector3 b = {4.0, 5.0, 6.0};
+    Vector3 sum = add(a, b);
+    printf("Vector sum: (%f, %f, %f)\n", sum.x, sum.y, sum.z);
+
+    // Test the vector subtraction function
+    Vector3 c = {3.0, 2.0, 1.0};
+    Vector3 d = {1.0, 2.0, 3.0};
+    Vector3 diff = sub(c, d);
+    printf("Vector difference: (%f, %f, %f)\n", diff.x, diff.y, diff.z);
+
+    // Test the forces on the springs using a table of weights
+    Poids weights[3];
+    weights[0].position.x = 0.0;
+    weights[0].position.y = 0.0;
+    weights[0].position.z = 0.0;
+    weights[1].position.x = 0.0;
+    weights[1].position.y = 1.0;
+    weights[1].position.z = 0.0;
+    weights[2].position.x = 0.0;
+    weights[2].position.y = 2.0;
+    weights[2].position.z = 0.0;
+
+
+    int springs[][2] = {{0, 1},{1, 2}};
+    int num_springs = 2;
+
+    Vector3 total_forces[3] = {{0.0, 0.0, 0.0},{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+
+    tables_forces_ressorts(weights, springs, num_springs, k, length_rest, total_forces);
+
+    printf("Total forces on weight 0: (%f, %f, %f)\n", total_forces[0].x, total_forces[0].y, total_forces[0].z);
+    printf("Total forces on weight 1: (%f, %f, %f)\n", total_forces[1].x, total_forces[1].y, total_forces[1].z);
+    printf("Total forces on weight 2: (%f, %f, %f)\n", total_forces[2].x, total_forces[2].y, total_forces[2].z);
+
+    // Test the fluid friction force
+    float viscosity = 0.1;
+    float radius = 0.5;
+    Vector3 velocity = {1.0, 2.0, 3.0};
+    Vector3 friction_force = f_resist(viscosity, radius, velocity);
+    printf("Fluid friction force: (%f, %f, %f)\n", friction_force.x, friction_force.y, friction_force.z);
+
+    // Test the gravitational force
+    float mass = 1.0;
+    Vector3 gravity_force = f_pesanteur(mass);
+    printf("Gravitational force: (%f, %f, %f)\n", gravity_force.x, gravity_force.y, gravity_force.z);
+
+    /*Poids * tableau;
     int taille_tableau = 9,i;
     Ressorts R;
     R.longueur = 3;
@@ -152,7 +208,7 @@ int main() {
     }
 
     free(tableau_position_poids_fixes);
-    free(tableau);
+    free(tableau);*/
     return 0;
 }
 
