@@ -21,7 +21,7 @@ void main(void) {
   vec4 Lpv = viewMatrix * Lp;
   vec3 textureColor = texture(textureSampler, vsiTexCoord).rgb;
 
-  vec3 p = vec3(textureColor.x, textureColor.y, textureColor.z);
+  vec3 p = vec3(textureColor.x, textureColor.z, textureColor.y);
 
   vsoModPos = viewMatrix * modelMatrix * vec4(p, 1.0);
 

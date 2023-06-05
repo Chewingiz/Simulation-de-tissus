@@ -69,16 +69,18 @@ void calculer_forces_totale_maj_vitesses(Poids* tableau_poids, int taille_tablea
 
     tables_forces_ressorts(tableau_poids, tableau_ressorts, taille_tableau_ressorts, k, longueur_ressort_repos, force_totales);
     for (i = 0;i < taille_tableau_poids;i++){
-    printf("\n forces tab =[%f,%f,%f]\n",force_totales[i].x,force_totales[i].y,force_totales[i].z );
+        printf("\n forces tab =[%f,%f,%f]\n",force_totales[i].x,force_totales[i].y,force_totales[i].z );
     }
     force_pesanteur = -tableau_poids[0].masse * g;
     for (i = 0;i < taille_tableau_poids;i++){
         force_resist = f_resist(viscosite, rayon, tableau_poids[i].vitesse_instantanee);// vitesse précédente
+        printf("\n resist =[%f,%f,%f]\n",force_resist.x,force_resist.y,force_resist.z );
         //force_pesanteur = f_pesanteur(tableau_poids[i].masse);// La masse est constante donc je ne le fait qu'une fois(en cas de masses différentes, le faire dans la boucle)
         force_resist.z += force_pesanteur;
+        printf("\n resist2 =[%f,%f,%f]\n",force_resist.x,force_resist.y,force_resist.z );
+        printf("\n force_pesanteur =[%f]\n",force_pesanteur );
         force_tmp = add(force_resist, autres_forces);
         force_totales[i] = add(force_tmp, force_totales[i]);
-
         //Mise à jours des vitesses pour ne pas àvoir à iterer une seconde fois sur la liste
         maj_vitesse(&tableau_poids[i], force_totales[i]);
     }

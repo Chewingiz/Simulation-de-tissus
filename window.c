@@ -5,8 +5,6 @@
 #include <assert.h>
 #include <main.h>
 
-
-
 /* Prototypes des fonctions statiques contenues dans ce fichier C */
 static void init(void);
 static void key(int keycode);
@@ -33,8 +31,8 @@ static GLboolean _wf_mode = GL_FALSE;
     float longueur_ressort_repos = 1.0;
     float viscosite = 0.5;
     float rayon = 0.1;
-    Vector3 autres_forces = {0.0, 0.0, 0.0};
-    float k = 100.0;
+    Vector3 autres_forces = {0.0, 4.5, 0.0};
+    float k = 20.0;
 
 
 GLuint textureId;
@@ -44,10 +42,12 @@ int main(int argc, char ** argv) {
 			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN))
     return 1;
   init();
+
   atexit(quit);
   gl4duwDisplayFunc(draw);
   gl4duwKeyDownFunc(key);
   gl4duwMainLoop();
+
   return 0;
 }
 
@@ -57,10 +57,9 @@ Vector3** tableau_principal;
 
 void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     for (int i = 0; i < size; i++) {
-        tableau_1D[i * 3] = tableau[i].position.x*8;
+        tableau_1D[i * 3]     = tableau[i].position.x*8;
         tableau_1D[i * 3 + 1] = tableau[i].position.y*8;
         tableau_1D[i * 3 + 2] = tableau[i].position.z*8;
-        //printf("aaaaaaaaaaaaaaaaaaaaaa %f      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ",tableau_1D[i+2]);
     }
 }
 
@@ -105,11 +104,10 @@ GLuint createVertexTexture(Vector3** data, int width, int height) {
     }
 
 // Étape 3 : Configuration des paramètres de texture
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des x
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des y
-
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des x
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des y
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, flattenedData);
     free(flattenedData);
@@ -135,8 +133,7 @@ void init(void) {
   tableau_principal = init_table(10, 10);
   createVertexTexture(tableau_principal, 10, 10);
   
-  
-      // Initialisation des valeurs des poids
+    // Initialisation des valeurs des poids
     tableau_poids[0].position.x = 0.0;
     tableau_poids[0].position.y = 0.0;
     tableau_poids[0].position.z = 1.0;
@@ -168,7 +165,6 @@ void init(void) {
     tableau_poids[3].vitesse_instantanee.x = 0.0;
     tableau_poids[3].vitesse_instantanee.y = 0.0;
     tableau_poids[3].vitesse_instantanee.z = 0.0;  
-  
 }
 
 void key(int keycode) {
@@ -188,69 +184,52 @@ void draw(void) {
   float* flattenedData = (float*)malloc(taille_tableau_poids  * 3 * sizeof(float));
   static float dt = 0;
   static float t = 0;
-
   dt = get_dt();
-
-    
-    
   static GLfloat angle = 0.0f;
-
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   Lp[0] = -4.0f * cos(angle * M_PI / (1.0f * 180.0f));
   GLfloat bleu[] = {0, 0, 1, 1};
   GLfloat dir[] = {0, 0, 1};
   glUseProgram(_pId);
-
   gl4duBindMatrix("viewMatrix");
-
   gl4duLoadIdentityf();
-
   gl4duLookAtf(15, 15, 20, 0, 0, 0, 0, 1, 0);
-
   gl4duBindMatrix("modelMatrix");
   gl4duLoadIdentityf();
-
   gl4duSendMatrices();
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureId);
-  
-  
   if (t>0.1){
   /*MAJ TAB*/
    calculer_forces_totale_maj_vitesses(tableau_poids, taille_tableau_poids, tableau_ressorts, taille_tableau_ressorts, longueur_ressort_repos, viscosite, rayon, autres_forces, k);
-
     // Affichage des résultats après l'appel de la fonction
     for (int i = 0; i < taille_tableau_poids; i++) {
         printf("Poids %d : vitesse = (%f, %f, %f)\n", i, tableau_poids[i].vitesse_instantanee.x, tableau_poids[i].vitesse_instantanee.y, tableau_poids[i].vitesse_instantanee.z);
     }
-    maj_positions(tableau_poids, 2);
+    maj_positions(tableau_poids, 4);
+    tableau_poids[2].position.x = 0.0;
+    tableau_poids[2].position.y = 0.0;
+    tableau_poids[2].position.z = 0.0;
+    //tableau_poids[2].vitesse_instantanee.x = 0.0;
 
-
-    tableau_poids[0].position.x = 0.0;
-    tableau_poids[0].position.y = 0.0;
-    tableau_poids[0].position.z = 1.0;
-    tableau_poids[1].vitesse_instantanee.x = 0.0;
+    tableau_poids[1].position.x = 1.0;
+    tableau_poids[1].position.y = 0.0;
+    tableau_poids[1].position.z = 1.0;
+    //tableau_poids[1].vitesse_instantanee.x = 0.0;
     afficher_positions_tableau(tableau_poids, 4);
     //afficher_positions_tableau(tableau_poids, 2);
-    
 /*Fin maj*/
-ap_tableau_poids(flattenedData, tableau_poids, 4);
-  
-	 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 2, 2, 0, GL_RGB, GL_FLOAT, flattenedData);
-	 t=0;
-	 }else{
-	   t +=dt;
-	 }
-	 
+    ap_tableau_poids(flattenedData, tableau_poids, 4);
+	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 2, 2, 0, GL_RGB, GL_FLOAT, flattenedData);
+	  t=0;
+  }else{
+	  t +=dt;
+  }
   glUniform1i(glGetUniformLocation(_pId, "textureSampler"),0);
-  
   glUniform1f(glGetUniformLocation(_pId, "phase"), -angle / 180.0f);
   glUniform4fv(glGetUniformLocation(_pId, "Lp"), 1, Lp);
   glUniform4fv(glGetUniformLocation(_pId, "couleur"), 1, bleu);
-
   gl4dgDraw(_objId);
-
-
   glUseProgram(0);
   free(flattenedData);
   glBindTexture(GL_TEXTURE_2D, 0);
