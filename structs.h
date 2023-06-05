@@ -25,10 +25,32 @@ typedef struct {
 
 typedef struct {
     A delta_t_;
-    Vector3 gravite;
-    int nmb_forces;
-    A *FE;
+    Vector3 forces_exterieures;
+    A viscosite;
+    //int nmb_forces;
+    //A *FE;
 } Env;
+
+typedef struct {
+    int taille_x;
+    int taille_y;
+    Poids* tableau;
+    /*Ressorts*/
+    int ** tableau_ressorts;
+    int taille_tableau_ressorts;
+    A k ; //constante de raideur du ressort
+    A longueur_ressorts_repos;
+    /*Poids fixes*/
+    int * liste_index_poids_fixes;
+    int nb_poids_fixes;
+} Modele;
+
+typedef struct {
+    A gravite; // La masse est la même pour tout les poids
+    int taille_tableau;
+    Vector3 * position_poids_fixes;
+} Complement_Modele; // Paramètres calculés une seule fois pour limiter le nombre de calculs
+
 
 Poids* init_tableau_exemple(int x, float longueur) ;
 void afficher_positions_tableau(Poids * tableau, int taille_x);
