@@ -17,7 +17,7 @@ static int _wW = 800, _wH = 600;
 /*!\brief identifiant du (futur) GLSL program */
 static GLuint _pId = 0;
 /*!\brief identifiant de la texture */
-static GLuint _tex = 0;
+//static GLuint _tex = 0;
 /*!\brief identifiant de modèle 3D */
 static GLuint _objId = 0;
 /*!\brief flag mode fil de fer */
@@ -118,7 +118,7 @@ GLuint createVertexTexture(Vector3** data, int width, int height) {
 
 void init(void) {
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
-  _objId = gl4dgGenGrid2df (10, 10);
+  _objId = gl4dgGenGrid2df (2, 2);
   glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LINE_SMOOTH);
@@ -189,7 +189,7 @@ void draw(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   Lp[0] = -4.0f * cos(angle * M_PI / (1.0f * 180.0f));
   GLfloat bleu[] = {0, 0, 1, 1};
-  GLfloat dir[] = {0, 0, 1};
+  //GLfloat dir[] = {0, 0, 1};
   glUseProgram(_pId);
   gl4duBindMatrix("viewMatrix");
   gl4duLoadIdentityf();
