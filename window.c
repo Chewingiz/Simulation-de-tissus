@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <main.h>
+#include <lib/cJSON.h>
 
 /* Prototypes des fonctions statiques contenues dans ce fichier C */
 static void init(void);
@@ -153,6 +154,59 @@ Vector3** init_table(int rows, int cols) {
     return data;
 }
 
+
+
+Env load_env(){
+  const char* filename = "env.json";
+  FILE* file = fopen(filename, "r");
+  if (file == NULL) {
+      printf("Impossible d'ouvrir le fichier JSON.\n");
+      exit(1);
+  }
+
+  fseek(file, 0, SEEK_END);
+  long file_size = ftell(file);
+  rewind(file);
+
+  char* json_data = (char*)malloc(file_size + 1);
+  if (json_data == NULL) {
+      printf("Impossible d'allouer suffisamment de mémoire.\n");
+      fclose(file);
+      exit(1);
+  }
+
+  fread(json_data, file_size, 1, file);
+  json_data[file_size] = '\0';
+
+  fclose(file);
+
+  cJSON* root = cJSON_Parse(json_data);
+  if (root == NULL) {
+      printf("Erreur lors de l'analyse du fichier JSON.\n");
+      free(json_data);
+      exit(1);
+  }
+
+  Env env;
+
+  // Récupérez les valeurs individuelles du fichier JSON
+  cJSON* delta_t_item = cJSON_GetObjectItem(root, "delta_t_");
+  cJSON* forces_exterieures_item = cJSON_GetObjectItem(root, "forces_exterieures");
+  cJSON* viscosite_item = cJSON_GetObjectItem(root, "viscosite");
+
+  // Assignez les valeurs aux membres de la structure Env
+  env.delta_t_ = (float)delta_t_item->valuedouble;
+  env.forces_exterieures.x = (float)cJSON_GetObjectItem(forces_exterieures_item, "x")->valuedouble;
+  env.forces_exterieures.y = (float)cJSON_GetObjectItem(forces_exterieures_item, "y")->valuedouble;
+  env.forces_exterieures.z = (float)cJSON_GetObjectItem(forces_exterieures_item, "z")->valuedouble;
+  env.viscosite = (float)viscosite_item->valuedouble;
+
+  cJSON_Delete(root);
+  free(json_data);
+  return env;
+}
+
+
 GLuint createVertexTexture(Poids* tableau, int width, int height) {
     
     glGenTextures(1, &textureId);
@@ -203,7 +257,7 @@ void init(void) {
 
 
 
-    environnement = create_env();
+    environnement =  load_env();//create_env();
     
     modele = *create_modele();
 
