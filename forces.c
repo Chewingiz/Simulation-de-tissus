@@ -30,9 +30,6 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
     
     if (distance == 0) {
         //printf("\nDIV PAR 0\n");
-        direction_normalisee.x = 0.0;
-        direction_normalisee.y = 0.0;
-        direction_normalisee.z = 0.0;
         force.x = 0.0;
         force.y = 0.0;
         force.z = 0.0;
@@ -67,7 +64,7 @@ Vector3 sub(Vector3 a, Vector3 b){
     return res;
 }
 
-void tables_forces_ressorts(Poids* tableau_poids, int tableau_ressorts[][2], int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
+void tables_forces_ressorts(Poids* tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
     int i;
     int* ressort;
     Vector3 resultat_calcul_force, nouvelle_force_P1, nouvelle_force_P2;
