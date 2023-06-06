@@ -175,6 +175,14 @@ GLuint createVertexTexture(Poids* tableau, int width, int height) {
 }
 
 
+Env create_env(){
+    Env env;
+    env.delta_t_ = 0.1;
+    env.forces_exterieures = autres_forces;
+    env.viscosite = 0.5;
+    return env;
+}
+
 void init(void) {
   int i;
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
@@ -195,13 +203,8 @@ void init(void) {
 
 
 
-    environnement.delta_t_ = 0.1;
-    environnement.forces_exterieures = autres_forces;
-    environnement.viscosite = 0.5;
-    //int nmb_forces;
-    //printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa %f",environnement.viscosite);
-
-
+    environnement = create_env();
+    
     modele = *create_modele();
 
     /*Complement modele*/
