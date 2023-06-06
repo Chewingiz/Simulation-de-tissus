@@ -34,6 +34,7 @@ typedef struct {
 typedef struct {
     int taille_x;
     int taille_y;
+    A rayon_poids;
     Poids* tableau;
     /*Ressorts*/
     int ** tableau_ressorts;
@@ -52,6 +53,6 @@ typedef struct {
 } Complement_Modele; // Paramètres calculés une seule fois pour limiter le nombre de calculs
 
 
-Poids* init_tableau_exemple(int x, float longueur) ;
+Poids* init_tableau_exemple(int x,int y, float longueur) ;
 void afficher_positions_tableau(Poids * tableau, int taille_x);
 void afficher_vitesse_tableau(Poids * tableau, int taille_x);

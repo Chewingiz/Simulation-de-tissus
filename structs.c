@@ -1,20 +1,23 @@
 #include "structs.h"
 
 /*longueure ressort*/
-Poids* init_tableau_exemple(int x, float longueur) {
-    Poids* tableau_poids = malloc(sizeof(Poids)*x);
+Poids* init_tableau_exemple(int x, int y, float longueur) {
+    Poids* tableau_poids = malloc(sizeof(Poids) * x * y);
 
     for (int i = 0; i < x; i++) {
-        Vector3 vitesse;
-        vitesse.x = 0.0; vitesse.y = 0.0; vitesse.z = 0.0;
+        for (int j = 0; j < y; j++) {
+            Vector3 vitesse;
+            vitesse.x = 0.0; vitesse.y = 0.0; vitesse.z = 0.0;
 
-        tableau_poids[i].position.x = i * longueur;
-        tableau_poids[i].position.y = i * longueur;
-        tableau_poids[i].position.z = 0;
-            
-        tableau_poids[i].vitesse_instantanee = vitesse ;
-        tableau_poids[i].masse = 0.5 ;
+            tableau_poids[i * y + j].position.x = i * longueur;
+            tableau_poids[i * y + j].position.y = j * longueur;
+            tableau_poids[i * y + j].position.z = 1;
+
+            tableau_poids[i * y + j].vitesse_instantanee = vitesse;
+            tableau_poids[i * y + j].masse = 0.5;
+        }
     }
+
     return tableau_poids;
 }
 
