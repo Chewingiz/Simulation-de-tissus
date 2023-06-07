@@ -191,7 +191,7 @@ Modele* load_modele(const char* filename){
       exit(1);
   }
 
-  fread(json_data, file_size, 1, file);
+  printf("   nb b = %ld\n",fread(json_data, file_size, 1, file));
   json_data[file_size] = '\0';
 
   fclose(file);
@@ -294,7 +294,7 @@ Env load_env(const char* filename){
       exit(1);
   }
 
-  fread(json_data, file_size, 1, file);
+  printf("   nb b = %ld\n",fread(json_data, file_size, 1, file));
   json_data[file_size] = '\0';
 
   fclose(file);
