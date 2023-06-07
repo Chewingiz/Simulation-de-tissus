@@ -33,7 +33,7 @@ static GLboolean _wf_mode = GL_FALSE;
     float viscosite = 0.5;
     float rayon = 0.1;
     Vector3 autres_forces = {0.0, 4.5, 0.0};
-    float k = 20.0;
+    //float k = 20.0;
 
 Env environnement;
 Modele modele;
@@ -127,9 +127,9 @@ Vector3** tableau_principal;
 
 void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     for (int i = 0; i < size; i++) {
-        tableau_1D[i * 3]     = (float)tableau[i].position.x*8;
-        tableau_1D[i * 3 + 1] = (float)tableau[i].position.y*8;
-        tableau_1D[i * 3 + 2] = (float)tableau[i].position.z*8;
+        tableau_1D[i * 3]     = (float)tableau[i].position.x*1;
+        tableau_1D[i * 3 + 1] = (float)tableau[i].position.y*1;
+        tableau_1D[i * 3 + 2] = (float)tableau[i].position.z*1;
     }
 }
 
@@ -154,7 +154,108 @@ Vector3** init_table(int rows, int cols) {
     return data;
 }
 
+Modele* load_modele(){
+   const char* filename = "modele.json";
+  FILE* file = fopen(filename, "r");
+  if (file == NULL) {
+      printf("Impossible d'ouvrir le fichier JSON.\n");
+      exit(1);
+  }
 
+  fseek(file, 0, SEEK_END);
+  long file_size = ftell(file);
+  rewind(file);
+
+  char* json_data = (char*)malloc(file_size + 1);
+  if (json_data == NULL) {
+      printf("Impossible d'allouer suffisamment de mémoire.\n");
+      fclose(file);
+      exit(1);
+  }
+
+  fread(json_data, file_size, 1, file);
+  json_data[file_size] = '\0';
+
+  fclose(file);
+
+  cJSON* root = cJSON_Parse(json_data);
+  if (root == NULL) {
+      printf("Erreur lors de l'analyse du fichier JSON.\n");
+      free(json_data);
+      exit(1);
+  }
+  Modele* model_ptr = malloc(sizeof(Modele));
+
+
+    model_ptr->taille_x = cJSON_GetObjectItem(root, "taille_x")->valueint;
+    model_ptr->taille_y = cJSON_GetObjectItem(root, "taille_y")->valueint;
+    model_ptr->rayon_poids = (float)cJSON_GetObjectItem(root, "rayon_poids")->valuedouble;
+    model_ptr->k = (float)cJSON_GetObjectItem(root, "k")->valuedouble;
+    model_ptr->longueur_ressorts_repos = (float)cJSON_GetObjectItem(root, "longueur_ressorts_repos")->valuedouble;
+    model_ptr->nb_poids_fixes = cJSON_GetObjectItem(root, "nb_poids_fixes")->valueint;
+    model_ptr->taille_tableau_ressorts = cJSON_GetObjectItem(root, "taille_tableau_ressorts")->valueint;
+
+    // Récuperation des listes
+    //tableau poids 
+    cJSON* tableau_item = cJSON_GetObjectItem(root, "tableau");
+    int tableau_size = cJSON_GetArraySize(tableau_item);
+    model_ptr->tableau = (Poids*)malloc(sizeof(Poids) * model_ptr->taille_x*model_ptr->taille_y);
+
+    for(int i=0;i < tableau_size;i++){
+        cJSON* poids = cJSON_GetArrayItem(tableau_item, i);
+        cJSON* pos = cJSON_GetObjectItem(poids, "position");
+        cJSON* vi = cJSON_GetObjectItem(poids, "vitesse_instantanee");
+
+        model_ptr->tableau[i].position.x = (float)cJSON_GetObjectItem(pos, "x")->valuedouble;
+        model_ptr->tableau[i].position.y = (float)cJSON_GetObjectItem(pos, "y")->valuedouble;
+        model_ptr->tableau[i].position.z = (float)cJSON_GetObjectItem(pos, "z")->valuedouble;
+
+        model_ptr->tableau[i].vitesse_instantanee.x = (float)cJSON_GetObjectItem(vi, "x")->valuedouble;
+        model_ptr->tableau[i].vitesse_instantanee.y = (float)cJSON_GetObjectItem(vi, "y")->valuedouble;
+        model_ptr->tableau[i].vitesse_instantanee.z = (float)cJSON_GetObjectItem(vi, "z")->valuedouble;
+
+        model_ptr->tableau[i].masse = cJSON_GetObjectItem(poids, "masse")->valuedouble;
+
+    }
+
+
+    //tableau_ressorts
+    cJSON* tableau_ressorts_item = cJSON_GetObjectItem(root, "tableau_ressorts");
+    int tableau_ressorts_size = cJSON_GetArraySize(tableau_ressorts_item);
+    // Allouez de la mémoire pour le tableau de tableaux d'entiers
+    model_ptr->tableau_ressorts = (int**)malloc(tableau_ressorts_size * sizeof(int*));
+
+    for (int i = 0; i < tableau_ressorts_size; i++) {
+        cJSON* sous_tableau_item = cJSON_GetArrayItem(tableau_ressorts_item, i);
+        if (cJSON_IsArray(sous_tableau_item)) {
+            int sous_tableau_size = cJSON_GetArraySize(sous_tableau_item);
+            // Allouez de la mémoire pour le sous-tableau d'entiers
+            int* sous_tableau = (int*)malloc(sous_tableau_size * sizeof(int));
+            for (int j = 0; j < sous_tableau_size; j++) {
+                cJSON* entier_item = cJSON_GetArrayItem(sous_tableau_item, j);
+                sous_tableau[j] = entier_item->valueint;
+            }
+            model_ptr->tableau_ressorts[i] = sous_tableau;
+        }
+    }
+
+
+    //liste poids fixes
+    cJSON* tableau_index_item = cJSON_GetObjectItem(root, "liste_index_poids_fixes"); 
+    int tableau_index_size = cJSON_GetArraySize(tableau_index_item);
+    model_ptr->liste_index_poids_fixes = (int*)malloc(tableau_index_size * sizeof(int));
+
+    for (int i = 0; i < tableau_index_size; i++) {
+        model_ptr->liste_index_poids_fixes[i] = cJSON_GetArrayItem(tableau_index_item, i)->valueint;
+    }
+
+
+
+
+ cJSON_Delete(root);
+  free(json_data);
+    return model_ptr;
+}
 
 Env load_env(){
   const char* filename = "env.json";
@@ -213,7 +314,7 @@ GLuint createVertexTexture(Poids* tableau, int width, int height) {
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     // Convertir le tableau 2D en un tableau 1D contenant les données consécutives
-    flattenedData = (float*)malloc(4 * 4 * 3 * sizeof(float)); //taille x taille y
+    flattenedData = (float*)malloc(width*height * 3 * sizeof(float)); //taille x taille y
  ap_tableau_poids(flattenedData, tableau, width * height );
   printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
  // Étape 3 : Configuration des paramètres de texture
@@ -240,7 +341,7 @@ Env create_env(){
 void init(void) {
   int i;
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
-  _objId = gl4dgGenGrid2df (10, 10);
+  _objId = gl4dgGenGrid2df (100, 100);
   glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LINE_SMOOTH);
@@ -259,13 +360,15 @@ void init(void) {
 
     environnement =  load_env();//create_env();
     
-    modele = *create_modele();
+    modele = *load_modele();//*create_modele();//
+    printf("k = %f",modele.k);
+    printf("taille_tableau_ressorts %d                      ",modele.taille_tableau_ressorts);
 
     /*Complement modele*/
     comp_modele.gravite = -modele.tableau[0].masse * g; // La masse est la même pour tout les poids
     //printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa %f",modele.tableau[1].position.x);
     comp_modele.taille_tableau = modele.taille_x * modele.taille_y;
-    comp_modele.position_poids_fixes = malloc(modele.nb_poids_fixes);
+    comp_modele.position_poids_fixes = malloc(modele.nb_poids_fixes*sizeof(Vector3));
     for(i = 0;i<modele.nb_poids_fixes;i++){ // recuperation de toutes les positions des poids fixes
         if(modele.liste_index_poids_fixes[i]<comp_modele.taille_tableau){
             comp_modele.position_poids_fixes[i] = modele.tableau[modele.liste_index_poids_fixes[i]].position;
@@ -276,7 +379,7 @@ void init(void) {
     printf("ok");
   createVertexTexture(modele.tableau, modele.taille_x, modele.taille_y);
 
-  afficher_positions_tableau(modele.tableau, 4);
+  afficher_positions_tableau(modele.tableau, comp_modele.taille_tableau);
   printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
 }
 
@@ -292,6 +395,7 @@ void key(int keycode) {
 }
 
 void Maj_tableau(Env env, Modele* mdl, Complement_Modele comp_mdl){
+  printf("\nk = %f\n\n\n",mdl->k);
     calculer_forces_totale_maj_vitesses(mdl->tableau, comp_mdl.taille_tableau, mdl->tableau_ressorts, mdl->taille_tableau_ressorts, mdl->longueur_ressorts_repos, env.viscosite, mdl->rayon_poids, env.forces_exterieures, mdl->k);
     maj_positions(mdl->tableau, comp_mdl.taille_tableau);
     //réinitialisation des positions des points fixes.
@@ -299,7 +403,7 @@ void Maj_tableau(Env env, Modele* mdl, Complement_Modele comp_mdl){
         mdl->tableau[mdl->liste_index_poids_fixes[i]].position = comp_mdl.position_poids_fixes[i];
     }
     printf("Table = \n ");
-    afficher_positions_tableau(mdl->tableau, 4);
+    afficher_positions_tableau(mdl->tableau, comp_modele.taille_tableau);
 }
 void draw(void) {
   GLfloat Lp[] = { -2.0f, 2.f, 0.0f, 1.0f };
@@ -321,12 +425,15 @@ void draw(void) {
   gl4duSendMatrices();
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureId);
+
+
+  printf("\nk = %f\n\n\n",modele.k);
   if (t>0.1){
     Maj_tableau(environnement, &modele, comp_modele);
     printf("\nTable2 = \n ");
-    afficher_positions_tableau(modele.tableau, 4);
-    ap_tableau_poids(flattenedData, modele.tableau, 4);
-	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 2, 2, 0, GL_RGB, GL_FLOAT, flattenedData);
+    afficher_positions_tableau(modele.tableau, comp_modele.taille_tableau);
+    ap_tableau_poids(flattenedData, modele.tableau, comp_modele.taille_tableau);
+	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, modele.taille_x, modele.taille_y, 0, GL_RGB, GL_FLOAT, flattenedData);
 	  t=0;
   }else{
 	  t +=dt;

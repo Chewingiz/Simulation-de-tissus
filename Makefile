@@ -21,7 +21,7 @@ PROGNAME = shadedVAOTriangle
 VERSION = 1.6.2
 distdir = $(PACKNAME)_$(PROGNAME)-$(VERSION)
 HEADERS = 
-SOURCES = window.c structs.c forces.c main.c
+SOURCES = window.c structs.c forces.c main.c lib/cJSON.c
 MSVCSRC = $(patsubst %,<ClCompile Include=\"%\\\" \\/>,$(SOURCES))
 OBJ = $(SOURCES:.c=.o)
 DOXYFILE = documentation/Doxyfile
