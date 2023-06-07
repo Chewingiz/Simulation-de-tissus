@@ -18,6 +18,7 @@ x : le d ́eformation en mètre (m).
 */
 
 Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_repos) {
+    //printf("\n K calcul ressorts = %f\n",k);
     Vector3 direction;
     Vector3 direction_normalisee;
     Vector3 force;
@@ -67,6 +68,7 @@ Vector3 sub(Vector3 a, Vector3 b){
 void tables_forces_ressorts(Poids* tableau_poids, int** tableau_ressorts, int taille_tableau_ressorts, float k, float longueur_ressort_repos, Vector3* tableau_forces_total_appliquer_sur_les_points_R) {
     int i;
     int* ressort;
+    //printf("taille_tableau_ressorts %d                      ",taille_tableau_ressorts);
     Vector3 resultat_calcul_force, nouvelle_force_P1, nouvelle_force_P2;
     for(i = 0; i < taille_tableau_ressorts; i++) {
         ressort = tableau_ressorts[i];
