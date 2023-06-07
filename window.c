@@ -7,7 +7,7 @@
 #include <lib/cJSON.h>
 
 /* Prototypes des fonctions statiques contenues dans ce fichier C */
-static void init(const char* n_env, const char* n_mod);
+static void init(const char* n_env, const char* n_mod, int gx, int gy);
 static void key(int keycode);
 static void draw(void);
 static void quit(void);
@@ -116,19 +116,21 @@ int main(int argc, char ** argv) {
 			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN))
     return 1;
 
-  if (argc < 3) {
+  if (argc < 5) {
     printf("Modele par défaut.\n");
     param1 =  "env.json"; 
     param2 = "modele.json"; 
   }else{
     param1 = argv[1];
     param2 = argv[2];
+    g1 = atoi(argv[3]);
+    g2 = atoi(argv[4]);
   }
 
   
   
 
-  init(param1,param );
+  init(param1,param2,g1,g2 );
 
   atexit(quit);
   gl4duwDisplayFunc(draw);
@@ -144,9 +146,9 @@ Vector3** tableau_principal;
 
 void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     for (int i = 0; i < size; i++) {
-        tableau_1D[i * 3]     = (float)tableau[i].position.x*1;
-        tableau_1D[i * 3 + 1] = (float)tableau[i].position.y*1;
-        tableau_1D[i * 3 + 2] = (float)tableau[i].position.z*1;
+        tableau_1D[i * 3]     = (float)tableau[i].position.x*5;
+        tableau_1D[i * 3 + 1] = (float)tableau[i].position.y*5;
+        tableau_1D[i * 3 + 2] = (float)tableau[i].position.z*5;
     }
 }
 
@@ -355,10 +357,10 @@ Env create_env(){
     return env;
 }
 
-void init(const char* n_env, const char* n_mod){
+void init(const char* n_env, const char* n_mod, int gx, int gy){
   int i;
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
-  _objId = gl4dgGenGrid2df (100, 100);
+  _objId = gl4dgGenGrid2df (gx, gy);
   glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LINE_SMOOTH);
