@@ -120,17 +120,14 @@ int main(int argc, char ** argv) {
 
   if (argc < 5) {
     printf("Modele par défaut.\n");
-    param1 =  "env.json"; 
-    param2 = "modele.json"; 
+    param1 = "modeles/env.json"; 
+    param2 = "modeles/modele.json"; 
   }else{
     param1 = argv[1];
     param2 = argv[2];
     g1 = atoi(argv[3]);
     g2 = atoi(argv[4]);
   }
-
-  
-  
 
   init(param1,param2,g1,g2 );
 
