@@ -7,7 +7,7 @@
 #include <lib/cJSON.h>
 
 /* Prototypes des fonctions statiques contenues dans ce fichier C */
-static void init(void);
+static void init(const char* n_env, const char* n_mod);
 static void key(int keycode);
 static void draw(void);
 static void quit(void);
@@ -108,10 +108,27 @@ void free_modele(Modele* model_ptr) {
 
 
 int main(int argc, char ** argv) {
+    const char *param1;
+    const char *param2;
+    int g1=10;
+    int g2=10;
   if(!gl4duwCreateWindow(argc, argv, "GL4Dummies", 20, 20, 
 			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN))
     return 1;
-  init();
+
+  if (argc < 3) {
+    printf("Modele par défaut.\n");
+    param1 =  "env.json"; 
+    param2 = "modele.json"; 
+  }else{
+    param1 = argv[1];
+    param2 = argv[2];
+  }
+
+  
+  
+
+  init(param1,param );
 
   atexit(quit);
   gl4duwDisplayFunc(draw);
@@ -154,8 +171,8 @@ Vector3** init_table(int rows, int cols) {
     return data;
 }
 
-Modele* load_modele(){
-   const char* filename = "modele.json";
+Modele* load_modele(const char* filename){
+   //const char* filename = "modele.json";
   FILE* file = fopen(filename, "r");
   if (file == NULL) {
       printf("Impossible d'ouvrir le fichier JSON.\n");
@@ -257,8 +274,8 @@ Modele* load_modele(){
     return model_ptr;
 }
 
-Env load_env(){
-  const char* filename = "env.json";
+Env load_env(const char* filename){
+  //const char* filename = "env.json";
   FILE* file = fopen(filename, "r");
   if (file == NULL) {
       printf("Impossible d'ouvrir le fichier JSON.\n");
@@ -316,13 +333,13 @@ GLuint createVertexTexture(Poids* tableau, int width, int height) {
     // Convertir le tableau 2D en un tableau 1D contenant les données consécutives
     flattenedData = (float*)malloc(width*height * 3 * sizeof(float)); //taille x taille y
  ap_tableau_poids(flattenedData, tableau, width * height );
-  printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
+  //printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
  // Étape 3 : Configuration des paramètres de texture
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des x
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des y
-    printf("ok2");
+    //printf("ok2");
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, flattenedData);
     //free(flattenedData);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -338,7 +355,7 @@ Env create_env(){
     return env;
 }
 
-void init(void) {
+void init(const char* n_env, const char* n_mod){
   int i;
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
   _objId = gl4dgGenGrid2df (100, 100);
@@ -358,15 +375,15 @@ void init(void) {
 
 
 
-    environnement =  load_env();//create_env();
-    
-    modele = *load_modele();//*create_modele();//
-    printf("k = %f",modele.k);
-    printf("taille_tableau_ressorts %d                      ",modele.taille_tableau_ressorts);
+    environnement =  load_env(n_env);//create_env();
+    modele = *load_modele(n_mod);//*create_modele();//
+
+    //printf("k = %f",modele.k);
+    //printf("taille_tableau_ressorts %d                      ",modele.taille_tableau_ressorts);
 
     /*Complement modele*/
     comp_modele.gravite = -modele.tableau[0].masse * g; // La masse est la même pour tout les poids
-    //printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa %f",modele.tableau[1].position.x);
+    //printf("%f",modele.tableau[1].position.x);
     comp_modele.taille_tableau = modele.taille_x * modele.taille_y;
     comp_modele.position_poids_fixes = malloc(modele.nb_poids_fixes*sizeof(Vector3));
     for(i = 0;i<modele.nb_poids_fixes;i++){ // recuperation de toutes les positions des poids fixes
@@ -376,11 +393,11 @@ void init(void) {
             printf("Erreur de modèle : le poids fixes à la position %d n'existe pas dans le modèle.", i);
         }
     }
-    printf("ok");
+    //printf("ok");
   createVertexTexture(modele.tableau, modele.taille_x, modele.taille_y);
 
-  afficher_positions_tableau(modele.tableau, comp_modele.taille_tableau);
-  printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
+  //afficher_positions_tableau(modele.tableau, comp_modele.taille_tableau);
+  //printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
 }
 
 void key(int keycode) {
@@ -395,15 +412,15 @@ void key(int keycode) {
 }
 
 void Maj_tableau(Env env, Modele* mdl, Complement_Modele comp_mdl){
-  printf("\nk = %f\n\n\n",mdl->k);
+  //printf("\nk = %f\n\n\n",mdl->k);
     calculer_forces_totale_maj_vitesses(mdl->tableau, comp_mdl.taille_tableau, mdl->tableau_ressorts, mdl->taille_tableau_ressorts, mdl->longueur_ressorts_repos, env.viscosite, mdl->rayon_poids, env.forces_exterieures, mdl->k);
     maj_positions(mdl->tableau, comp_mdl.taille_tableau);
     //réinitialisation des positions des points fixes.
     for(int i=0; i<mdl->nb_poids_fixes; i++){
         mdl->tableau[mdl->liste_index_poids_fixes[i]].position = comp_mdl.position_poids_fixes[i];
     }
-    printf("Table = \n ");
-    afficher_positions_tableau(mdl->tableau, comp_modele.taille_tableau);
+    //printf("Table = \n ");
+    //afficher_positions_tableau(mdl->tableau, comp_modele.taille_tableau);
 }
 void draw(void) {
   GLfloat Lp[] = { -2.0f, 2.f, 0.0f, 1.0f };
@@ -427,11 +444,11 @@ void draw(void) {
   glBindTexture(GL_TEXTURE_2D, textureId);
 
 
-  printf("\nk = %f\n\n\n",modele.k);
+  //printf("\nk = %f\n\n\n",modele.k);
   if (t>0.1){
     Maj_tableau(environnement, &modele, comp_modele);
-    printf("\nTable2 = \n ");
-    afficher_positions_tableau(modele.tableau, comp_modele.taille_tableau);
+    //printf("\nTable2 = \n ");
+    //afficher_positions_tableau(modele.tableau, comp_modele.taille_tableau);
     ap_tableau_poids(flattenedData, modele.tableau, comp_modele.taille_tableau);
 	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, modele.taille_x, modele.taille_y, 0, GL_RGB, GL_FLOAT, flattenedData);
 	  t=0;
@@ -441,7 +458,7 @@ void draw(void) {
 
 
 
-  //printf("Viscoaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa %f",environnement.viscosite);
+  //printf("Visco %f",environnement.viscosite);
   glUniform1i(glGetUniformLocation(_pId, "textureSampler"),0);
   glUniform1f(glGetUniformLocation(_pId, "phase"), -angle / 180.0f);
   glUniform4fv(glGetUniformLocation(_pId, "Lp"), 1, Lp);
