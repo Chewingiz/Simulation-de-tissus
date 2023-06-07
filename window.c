@@ -24,6 +24,8 @@ static GLuint _objId = 0;
 /*!\brief flag mode fil de fer */
 static GLboolean _wf_mode = GL_FALSE;
 
+static int _cam = 0; 
+
 
     int taille_tableau_poids = 4;
     Poids tableau_poids[4];
@@ -403,10 +405,15 @@ void init(const char* n_env, const char* n_mod, int gx, int gy){
 }
 
 void key(int keycode) {
+  static int v = 0;
   switch(keycode) {
   case 'w':
     _wf_mode = !_wf_mode;
     glPolygonMode(GL_FRONT_AND_BACK, _wf_mode ? GL_LINE : GL_FILL);
+    break;
+  case 'v':
+    v++;
+    _cam = v%2;
     break;
   default:
     break;
@@ -438,7 +445,13 @@ void draw(void) {
   glUseProgram(_pId);
   gl4duBindMatrix("viewMatrix");
   gl4duLoadIdentityf();
-  gl4duLookAtf(15, 15, 20, 0, 0, 0, 0, 1, 0);
+  if(_cam == 0){
+    gl4duLookAtf(15, 15, 20, 0, 0, 0, 0, 1, 0);
+  } else{
+    gl4duLookAtf(5, 20, 20, 5, 0, 5, 0, 1, 0);
+  }
+  
+  
   gl4duBindMatrix("modelMatrix");
   gl4duLoadIdentityf();
   gl4duSendMatrices();
