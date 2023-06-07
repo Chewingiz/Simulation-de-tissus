@@ -1,0 +1,18 @@
+{
+  "taille_x": 2,
+  "taille_y": 2,
+  "rayon_poids": 0.1,
+  "tableau": [
+  				{"position":{ "x": 0, "y": 0, "z": 1 }, "vitesse_instantanee":{ "x": 0, "y": 0, "z": 0 }, "masse": 0.5},
+  				{"position":{ "x": 0, "y": 1, "z": 1 }, "vitesse_instantanee":{ "x": 0, "y": 0, "z": 0 }, "masse": 0.5},
+  				{"position":{ "x": 1, "y": 0, "z": 1 }, "vitesse_instantanee":{ "x": 0, "y": 0, "z": 0 }, "masse": 0.5},
+                {"position":{ "x": 1, "y": 1, "z": 1 }, "vitesse_instantanee":{ "x": 0, "y": 0, "z": 0 }, "masse": 0.5}
+			 ]
+,
+  "tableau_ressorts": [[0, 1],[0, 2],[1, 3], [2, 3]],
+  "taille_tableau_ressorts": 4,
+  "k": 1,
+  "longueur_ressorts_repos": 1.0,
+  "liste_index_poids_fixes": [2, 1],
+  "nb_poids_fixes": 2
+}
