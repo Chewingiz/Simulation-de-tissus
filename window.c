@@ -36,7 +36,7 @@ int main(int argc, char ** argv) {
   const char *param2;
   int g1=10;
   int g2=10;
-  if(!gl4duwCreateWindow(argc, argv, "GL4Dummies", 20, 20, 
+  if(!gl4duwCreateWindow(argc, argv, "Simulation", 20, 20, 
 			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN)){return 1;}
 
   if (argc < 5) {
