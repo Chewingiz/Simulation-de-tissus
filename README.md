@@ -14,7 +14,7 @@ Projet de simulation de tissus en 3D soumis à des forces internes (ressorts) et
 ## Fonctionnement
 ### Définition du modèle
 Le modèle de représentation pour notre tissu correspond à un ensemble de poids et de ressorts qui les relient entre eux. Ainsi, nous pourrons calculer les forces appliquées à chaque poids qui a une masse, une position et une vitesse instantanée. Cela permet de limiter le nombre de calculs nécessaires. L'ajout des ressorts permet de modéliser les forces internes du tissu, telles que son élasticité et son épaisseur. Cette approche nous permet d'obtenir des simulations précises et réalistes du comportement du tissu.
-<img src="images_rm/modele.png" alt="Illustration modèle" style="width: 40%;">
+<img src="images_rm/modele.png" alt="Illustration modèle" style="width: 50%;">
 
 
 ### Comment compiler l'application?
