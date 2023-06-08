@@ -12,11 +12,12 @@ static void init(const char* n_env, const char* n_mod, int gx, int gy);
 static void key(int keycode);
 static void draw(void);
 static void quit(void);
+static void resize(int w, int h);
 static inline double get_dt(void);
 
 
 /* largeur et hauteur de la fenêtre */
-static int _wW = 1000, _wH = 600;
+static GLfloat _dim[] = {1024, 768};
 /*! identifiant du (futur) GLSL program */
 static GLuint _pId = 0;
 /* identifiant de modèle 3D */
@@ -37,7 +38,7 @@ int main(int argc, char ** argv) {
   int g1=10;
   int g2=10;
   if(!gl4duwCreateWindow(argc, argv, "Simulation", 20, 20, 
-			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN)){return 1;}
+			 _dim[0], _dim[1], GL4DW_RESIZABLE | GL4DW_SHOWN)){return 1;}
 
   if (argc < 5) {
     printf("Modele par défaut.\n");
@@ -51,6 +52,7 @@ int main(int argc, char ** argv) {
   }
   init(param1,param2,g1,g2 );
   atexit(quit);
+  gl4duwResizeFunc(resize);
   gl4duwDisplayFunc(draw);
   gl4duwKeyDownFunc(key);
   gl4duwMainLoop();
@@ -97,8 +99,8 @@ void init(const char* n_env, const char* n_mod, int gx, int gy){
   gl4duGenMatrix(GL_FLOAT, "viewMatrix");
   gl4duBindMatrix("projectionMatrix");
   gl4duLoadIdentityf();
-  gl4duFrustumf(-1, 1, (-1.0f * _wH) / _wW, (1.0f * _wH) / _wW, 2, 100);
-  glViewport(0, 0, _wW, _wH);
+  gl4duFrustumf(-1, 1, (-1.0f * _dim[1] ) / _dim[0] , (1.0f *  _dim[1] ) / _dim[0] , 2, 100);
+  glViewport(0, 0, _dim[0] ,  _dim[1] );
 
   environnement =  load_env(n_env);//create_env();
   modele = *load_modele(n_mod);//*create_modele();//
@@ -193,6 +195,11 @@ void draw(void) {
   //free(flattenedData);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
+static void resize(int w, int h) {
+  _dim[0] = w; _dim[1] = h;
+  glViewport(0, 0, _dim[0], _dim[1]);
+}
+
 
 void quit(void) {
   free(comp_modele.position_poids_fixes);
