@@ -12,7 +12,7 @@ CPPFLAGS = -I.
 LDFLAGS = -lm
 # définition des fichiers et dossiers
 PACKNAME = sc_02_01
-PROGNAME = shadedVAOTriangle
+PROGNAME = simulation
 VERSION = 1.6.2
 distdir = $(PACKNAME)_$(PROGNAME)-$(VERSION)
 HEADERS = 
