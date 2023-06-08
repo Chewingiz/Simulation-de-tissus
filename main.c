@@ -34,8 +34,6 @@ void maj_vitesses(Poids * tableau, int taille_x){
     }
 }
 
-
-
 /* Calcul de la force totale */
 //Vector3 * calculer_
 /*Autres forces = autres forces qui s'appliquent sur le tissus (vent)*/

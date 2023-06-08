@@ -2,19 +2,10 @@
 #include <math.h>
 #include "forces.h"
 
-/*#define g 9.800908285 // constante gravitationnelle
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-} Vector3;*/
-
 /*       Forces intérieures      */
 //Ressort
 /* Calcul de la force de rappel en Newton 
 k : la constante de rappel en Newton par mètre (N/m),
-x : le d ́eformation en mètre (m).
 */
 
 Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_repos) {
@@ -47,7 +38,6 @@ Vector3 calculs_ressort(Vector3 Pa, Vector3 Pb, float k, float longueur_ressort_
 
     return force;
 }
-
 
 Vector3 add(Vector3 a, Vector3 b){
     Vector3 res;
@@ -96,7 +86,6 @@ Vector3 f_resist(float viscosite, float rayon, Vector3 vitesse) {
     return force_resist;
 }
 
-
 /* Calcul de la force de pesanteur 
 m : masse de l'objet
 */
@@ -109,5 +98,5 @@ Vector3 f_pesanteur(float masse) {
 }
 //force_totales;
 
-/*ne pas oublier de tester si les ressorts relient des poids existant au chargement du  model (voir si chaque points sont < à taille tableau poids)
-tester si la liste de poids n'est pas vide */
+/* Ne pas oublierde vérifier si les ressorts relient des poids existants lors du chargement du modèle (vérifie si chaque point est inférieur à la taille du tableau des poids).
+Vérifier également si la liste des poids n'est pas vide. */

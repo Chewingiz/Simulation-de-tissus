@@ -1,9 +1,5 @@
 #include "gestion_modeles.h"
 
-
-
-
-
 Modele* create_modele() {
     Modele* model_ptr = malloc(sizeof(Modele));
     
@@ -39,8 +35,6 @@ Modele* create_modele() {
     return model_ptr;
 }
 
-
-
 void free_modele(Modele* model_ptr) {
     if (model_ptr == NULL) {
         return;
@@ -65,40 +59,37 @@ void free_modele(Modele* model_ptr) {
     //free(model_ptr);
 }
 
-
-
 Modele* load_modele(const char* filename){
-   //const char* filename = "modele.json";
-  FILE* file = fopen(filename, "r");
-  if (file == NULL) {
-      printf("Impossible d'ouvrir le fichier JSON.\n");
-      exit(1);
-  }
+     //const char* filename = "modele.json";
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Impossible d'ouvrir le fichier JSON.\n");
+        exit(1);
+    }
+    
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    rewind(file);
 
-  fseek(file, 0, SEEK_END);
-  long file_size = ftell(file);
-  rewind(file);
+    char* json_data = (char*)malloc(file_size + 1);
+    if (json_data == NULL) {
+        printf("Impossible d'allouer suffisamment de mémoire.\n");
+        fclose(file);
+        exit(1);
+    }
+    
+    printf("   nb b = %ld\n",fread(json_data, file_size, 1, file));
+    json_data[file_size] = '\0';
 
-  char* json_data = (char*)malloc(file_size + 1);
-  if (json_data == NULL) {
-      printf("Impossible d'allouer suffisamment de mémoire.\n");
-      fclose(file);
-      exit(1);
-  }
-
-  printf("   nb b = %ld\n",fread(json_data, file_size, 1, file));
-  json_data[file_size] = '\0';
-
-  fclose(file);
-
-  cJSON* root = cJSON_Parse(json_data);
-  if (root == NULL) {
-      printf("Erreur lors de l'analyse du fichier JSON.\n");
-      free(json_data);
-      exit(1);
-  }
-  Modele* model_ptr = malloc(sizeof(Modele));
-
+    fclose(file);
+    
+    cJSON* root = cJSON_Parse(json_data);
+    if (root == NULL) {
+        printf("Erreur lors de l'analyse du fichier JSON.\n");
+        free(json_data);
+        exit(1);
+    }
+    Modele* model_ptr = malloc(sizeof(Modele));
 
     model_ptr->taille_x = cJSON_GetObjectItem(root, "taille_x")->valueint;
     model_ptr->taille_y = cJSON_GetObjectItem(root, "taille_y")->valueint;
@@ -128,9 +119,7 @@ Modele* load_modele(const char* filename){
         model_ptr->tableau[i].vitesse_instantanee.z = (float)cJSON_GetObjectItem(vi, "z")->valuedouble;
 
         model_ptr->tableau[i].masse = cJSON_GetObjectItem(poids, "masse")->valuedouble;
-
     }
-
 
     //tableau_ressorts
     cJSON* tableau_ressorts_item = cJSON_GetObjectItem(root, "tableau_ressorts");
@@ -152,7 +141,6 @@ Modele* load_modele(const char* filename){
         }
     }
 
-
     //liste poids fixes
     cJSON* tableau_index_item = cJSON_GetObjectItem(root, "liste_index_poids_fixes"); 
     int tableau_index_size = cJSON_GetArraySize(tableau_index_item);
@@ -161,63 +149,58 @@ Modele* load_modele(const char* filename){
     for (int i = 0; i < tableau_index_size; i++) {
         model_ptr->liste_index_poids_fixes[i] = cJSON_GetArrayItem(tableau_index_item, i)->valueint;
     }
-
-
-
-
- cJSON_Delete(root);
-  free(json_data);
+    cJSON_Delete(root);
+    free(json_data);
     return model_ptr;
 }
 
 Env load_env(const char* filename){
-  //const char* filename = "env.json";
-  FILE* file = fopen(filename, "r");
-  if (file == NULL) {
-      printf("Impossible d'ouvrir le fichier JSON.\n");
-      exit(1);
-  }
+    //const char* filename = "env.json";
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Impossible d'ouvrir le fichier JSON.\n");
+        exit(1);
+    }
 
-  fseek(file, 0, SEEK_END);
-  long file_size = ftell(file);
-  rewind(file);
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    rewind(file);
 
-  char* json_data = (char*)malloc(file_size + 1);
-  if (json_data == NULL) {
-      printf("Impossible d'allouer suffisamment de mémoire.\n");
-      fclose(file);
-      exit(1);
-  }
+    char* json_data = (char*)malloc(file_size + 1);
+    if (json_data == NULL) {
+        printf("Impossible d'allouer suffisamment de mémoire.\n");
+        fclose(file);
+        exit(1);
+    }
+    printf("   nb b = %ld\n",fread(json_data, file_size, 1, file));
+    json_data[file_size] = '\0';
 
-  printf("   nb b = %ld\n",fread(json_data, file_size, 1, file));
-  json_data[file_size] = '\0';
+    fclose(file);
 
-  fclose(file);
+    cJSON* root = cJSON_Parse(json_data);
+    if (root == NULL) {
+        printf("Erreur lors de l'analyse du fichier JSON.\n");
+        free(json_data);
+        exit(1);
+    }
 
-  cJSON* root = cJSON_Parse(json_data);
-  if (root == NULL) {
-      printf("Erreur lors de l'analyse du fichier JSON.\n");
-      free(json_data);
-      exit(1);
-  }
+    Env env;
 
-  Env env;
+    // Récupérez les valeurs individuelles du fichier JSON
+    cJSON* delta_t_item = cJSON_GetObjectItem(root, "delta_t_");
+    cJSON* forces_exterieures_item = cJSON_GetObjectItem(root, "forces_exterieures");
+    cJSON* viscosite_item = cJSON_GetObjectItem(root, "viscosite");
 
-  // Récupérez les valeurs individuelles du fichier JSON
-  cJSON* delta_t_item = cJSON_GetObjectItem(root, "delta_t_");
-  cJSON* forces_exterieures_item = cJSON_GetObjectItem(root, "forces_exterieures");
-  cJSON* viscosite_item = cJSON_GetObjectItem(root, "viscosite");
+    // Assignez les valeurs aux membres de la structure Env
+    env.delta_t_ = (float)delta_t_item->valuedouble;
+    env.forces_exterieures.x = (float)cJSON_GetObjectItem(forces_exterieures_item, "x")->valuedouble;
+    env.forces_exterieures.y = (float)cJSON_GetObjectItem(forces_exterieures_item, "y")->valuedouble;
+    env.forces_exterieures.z = (float)cJSON_GetObjectItem(forces_exterieures_item, "z")->valuedouble;
+    env.viscosite = (float)viscosite_item->valuedouble;
 
-  // Assignez les valeurs aux membres de la structure Env
-  env.delta_t_ = (float)delta_t_item->valuedouble;
-  env.forces_exterieures.x = (float)cJSON_GetObjectItem(forces_exterieures_item, "x")->valuedouble;
-  env.forces_exterieures.y = (float)cJSON_GetObjectItem(forces_exterieures_item, "y")->valuedouble;
-  env.forces_exterieures.z = (float)cJSON_GetObjectItem(forces_exterieures_item, "z")->valuedouble;
-  env.viscosite = (float)viscosite_item->valuedouble;
-
-  cJSON_Delete(root);
-  free(json_data);
-  return env;
+    cJSON_Delete(root);
+    free(json_data);
+    return env;
 }
 
 Env create_env(){

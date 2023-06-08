@@ -14,17 +14,15 @@ static void draw(void);
 static void quit(void);
 static inline double get_dt(void);
 
-/*!\brief largeur et hauteur de la fenêtre */
-static int _wW = 1000, _wH = 600;
-/*!\brief identifiant du (futur) GLSL program */
-static GLuint _pId = 0;
-/*!\brief identifiant de la texture */
-//static GLuint _tex = 0;
-/*!\brief identifiant de modèle 3D */
-static GLuint _objId = 0;
-/*!\brief flag mode fil de fer */
-static GLboolean _wf_mode = GL_FALSE;
 
+/* largeur et hauteur de la fenêtre */
+static int _wW = 1000, _wH = 600;
+/*! identifiant du (futur) GLSL program */
+static GLuint _pId = 0;
+/* identifiant de modèle 3D */
+static GLuint _objId = 0;
+/* flag mode fil de fer */
+static GLboolean _wf_mode = GL_FALSE;
 static int _cam = 0; 
 
 Env environnement;
@@ -34,13 +32,12 @@ float* flattenedData;
 GLuint textureId;
 
 int main(int argc, char ** argv) {
-    const char *param1;
-    const char *param2;
-    int g1=10;
-    int g2=10;
+  const char *param1;
+  const char *param2;
+  int g1=10;
+  int g2=10;
   if(!gl4duwCreateWindow(argc, argv, "GL4Dummies", 20, 20, 
-			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN))
-    return 1;
+			 _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN)){return 1;}
 
   if (argc < 5) {
     printf("Modele par défaut.\n");
@@ -52,9 +49,7 @@ int main(int argc, char ** argv) {
     g1 = atoi(argv[3]);
     g2 = atoi(argv[4]);
   }
-
   init(param1,param2,g1,g2 );
-
   atexit(quit);
   gl4duwDisplayFunc(draw);
   gl4duwKeyDownFunc(key);
@@ -62,7 +57,6 @@ int main(int argc, char ** argv) {
 
   return 0;
 }
-
 
 void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     for (int i = 0; i < size; i++) {
@@ -72,26 +66,23 @@ void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     }
 }
 
-
 GLuint createVertexTexture(Poids* tableau, int width, int height) {
-    
-    glGenTextures(1, &textureId);
-    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    // Convertir le tableau 2D en un tableau 1D contenant les données consécutives
-    flattenedData = (float*)malloc(width*height * 3 * sizeof(float)); //taille x taille y
- ap_tableau_poids(flattenedData, tableau, width * height );
+  glGenTextures(1, &textureId);
+  glBindTexture(GL_TEXTURE_2D, textureId);
+  // Convertir le tableau 2D en un tableau 1D contenant les données consécutives
+  flattenedData = (float*)malloc(width*height * 3 * sizeof(float)); //taille x taille y
+  ap_tableau_poids(flattenedData, tableau, width * height );
   //printf("fDATA = %f,%f,%f ",flattenedData[4],flattenedData[5],flattenedData[6]);
- // Étape 3 : Configuration des paramètres de texture
+  // Étape 3 : Configuration des paramètres de texture
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des x
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Définit le mode de wrapping sur l'axe des y
-    //printf("ok2");
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, flattenedData);
-    //free(flattenedData);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    return textureId;
+  //printf("ok2");
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, flattenedData);
+  //free(flattenedData);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  return textureId;
 }
 
 void init(const char* n_env, const char* n_mod, int gx, int gy){
@@ -109,24 +100,21 @@ void init(const char* n_env, const char* n_mod, int gx, int gy){
   gl4duFrustumf(-1, 1, (-1.0f * _wH) / _wW, (1.0f * _wH) / _wW, 2, 100);
   glViewport(0, 0, _wW, _wH);
 
-    environnement =  load_env(n_env);//create_env();
-    modele = *load_modele(n_mod);//*create_modele();//
+  environnement =  load_env(n_env);//create_env();
+  modele = *load_modele(n_mod);//*create_modele();//
 
-    //printf("k = %f",modele.k);
-    //printf("taille_tableau_ressorts %d                      ",modele.taille_tableau_ressorts);
-
-    /*Complement modele*/
-    comp_modele.gravite = -modele.tableau[0].masse * g; // La masse est la même pour tout les poids
-    //printf("%f",modele.tableau[1].position.x);
-    comp_modele.taille_tableau = modele.taille_x * modele.taille_y;
-    comp_modele.position_poids_fixes = malloc(modele.nb_poids_fixes*sizeof(Vector3));
-    for(i = 0;i<modele.nb_poids_fixes;i++){ // recuperation de toutes les positions des poids fixes
-        if(modele.liste_index_poids_fixes[i]<comp_modele.taille_tableau){
-            comp_modele.position_poids_fixes[i] = modele.tableau[modele.liste_index_poids_fixes[i]].position;
-        }else{
-            printf("Erreur de modèle : le poids fixes à la position %d n'existe pas dans le modèle.", i);
-        }
-    }
+  /*Création du Complément modele*/
+  comp_modele.gravite = -modele.tableau[0].masse * g; // La masse est la même pour tout les poids
+  //printf("%f",modele.tableau[1].position.x);
+  comp_modele.taille_tableau = modele.taille_x * modele.taille_y;
+  comp_modele.position_poids_fixes = malloc(modele.nb_poids_fixes*sizeof(Vector3));
+  for(i = 0;i<modele.nb_poids_fixes;i++){ // recuperation de toutes les positions des poids fixes
+      if(modele.liste_index_poids_fixes[i]<comp_modele.taille_tableau){
+          comp_modele.position_poids_fixes[i] = modele.tableau[modele.liste_index_poids_fixes[i]].position;
+      }else{
+          printf("Erreur de modèle : le poids fixes à la position %d n'existe pas dans le modèle.", i);
+      }
+  }
   createVertexTexture(modele.tableau, modele.taille_x, modele.taille_y);
 }
 
@@ -177,13 +165,11 @@ void draw(void) {
     gl4duLookAtf(5, 20, 20, 5, 0, 5, 0, 1, 0);
   }
   
-  
   gl4duBindMatrix("modelMatrix");
   gl4duLoadIdentityf();
   gl4duSendMatrices();
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureId);
-
 
   //printf("\nk = %f\n\n\n",modele.k);
   if (t>0.1){
@@ -197,8 +183,6 @@ void draw(void) {
 	  t +=dt;
   }
 
-
-
   //printf("Visco %f",environnement.viscosite);
   glUniform1i(glGetUniformLocation(_pId, "textureSampler"),0);
   glUniform1f(glGetUniformLocation(_pId, "phase"), -angle / 180.0f);
@@ -211,8 +195,6 @@ void draw(void) {
 }
 
 void quit(void) {
-
-  
   free(comp_modele.position_poids_fixes);
   free_modele(&modele);
   free(flattenedData);
