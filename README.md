@@ -14,7 +14,8 @@ Projet de simulation de tissus en 3D soumis à des forces internes (ressorts) et
 ## Fonctionnement
 ### Définition du modèle
 Le modèle de représentation pour notre tissu correspond à un ensemble de poids et de ressorts qui les relient entre eux. Ainsi, nous pourrons calculer les forces appliquées à chaque poids qui a une masse, une position et une vitesse instantanée. Cela permet de limiter le nombre de calculs nécessaires. L'ajout des ressorts permet de modéliser les forces internes du tissu, telles que son élasticité et son épaisseur. Cette approche nous permet d'obtenir des simulations précises et réalistes du comportement du tissu.
-![Illustration modèle](images_rm/modele.png)
+<img src="images_rm/modele.png" alt="Illustration modèle" style="width: 40%;">
+
 
 ### Comment compiler l'application?
 
@@ -101,8 +102,8 @@ Lorsque vous créez vos propres modèles de tissu, veillez à respecter la struc
 
 Pour l'affichage du tissu, nous utilisons un maillage GL4D. Les positions et vitesses calculées en C sont envoyées au vertex shader afin de modifier la position des points du maillage. Ci-dessous, vous pouvez voir une représentation simplifiée du tissu avec des triangles :
 
+<img src="images_rm/dtm.png" alt="Illustration différentes tailles de maillage" style="width: 80%;">
 
-![Illustration différentes tailles de maillage](images_rm/dtm.png)
 
 Nous utilisons le vertex shader pour modifier les positions des points du maillage. Pour transmettre les données, nous avons choisi de les encapsuler dans une texture. Voici les raisons de ce choix :
 
@@ -119,11 +120,12 @@ Tout d'abord, le GPU (Graphics Processing Unit) est spécialement conçu pour le
 
 Voici un schéma illustrant un tissu plié avec uniquement 4 points calculés en CPU et des tailles de maillages différentes (donc plus de points calculés par interpolation en GPU) :
 
-![Illustration différentes tailles de maillage pour tissus plié](images_rm/plie_dtm.png)
+<img src="images_rm/plie_dtm.png" alt="Illustration différentes tailles de maillage pour tissus plié" style="width: 80%;">
 
 En résumé, en utilisant une texture et en exploitant les capacités de calcul parallèle du GPU, nous parvenons à obtenir des transitions en douceur entre les positions, améliorant ainsi la qualité visuelle de notre tissu. De plus, le GPU offre une puissance de calcul significative pour traiter efficacement ces opérations.
 
 ## Images
 
-![GIF simulation simple](images_rm/simple.gif)
-![GIF simulation simple plié](images_rm/plie.gif)
+<img src="images_rm/simple.gif" alt="GIF simulation simple" style="width: 80%;">
+<img src="images_rm/plie.gif" alt="GIF simulation simple plié" style="width: 80%;">
+
