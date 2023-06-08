@@ -63,7 +63,6 @@ int main(int argc, char ** argv) {
   return 0;
 }
 
-Vector3** tableau_principal;
 
 void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     for (int i = 0; i < size; i++) {
@@ -73,26 +72,6 @@ void ap_tableau_poids(float* tableau_1D, Poids* tableau, int size) {
     }
 }
 
-Vector3** init_table(int rows, int cols) {
-    // Allocation dynamique du tableau 2D de Vector3
-    Vector3** data = (Vector3**)malloc(rows * sizeof(Vector3*));
-    for (int i = 0; i < rows; i++) {
-        data[i] = (Vector3*)malloc(cols * sizeof(Vector3));
-    }
-
-    // Initialisation du tableau avec des valeurs
-  for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-          // Assigner des valeurs aux membres x, y et z
-          data[i][j].x = (float)i; // Valeur de x basée sur l'indice de ligne
-          data[i][j].y = 0.0f;  // Valeur de y basée sur l'indice de colonne
-          data[i][j].z = (float)j;  // Valeur de z constante pour un plan
-          if (i>5){data[i][j].y = 1.f;}
-      }
-  }
-	data[9][0].y= 3; 
-    return data;
-}
 
 GLuint createVertexTexture(Poids* tableau, int width, int height) {
     
@@ -129,11 +108,6 @@ void init(const char* n_env, const char* n_mod, int gx, int gy){
   gl4duLoadIdentityf();
   gl4duFrustumf(-1, 1, (-1.0f * _wH) / _wW, (1.0f * _wH) / _wW, 2, 100);
   glViewport(0, 0, _wW, _wH);
-
-  //tableau_principal = init_table(10, 10);
-  
-
-
 
     environnement =  load_env(n_env);//create_env();
     modele = *load_modele(n_mod);//*create_modele();//
@@ -238,7 +212,7 @@ void draw(void) {
 
 void quit(void) {
 
-  free(tableau_principal);
+  
   free(comp_modele.position_poids_fixes);
   free_modele(&modele);
   free(flattenedData);
