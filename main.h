@@ -1,4 +1,5 @@
-#include "forces.h"
+
+#include <gestion_modeles.h>
 
 void maj_positions(Poids *tableau, int taille_x);
 void maj_vitesse(Poids* poids, Vector3 force);

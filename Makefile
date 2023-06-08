@@ -1,8 +1,3 @@
-#  Makefile 
-#  Auteur : Farès BELHADJ
-#  Email  : amsi@up8.edu
-#  Date   : 28/04/2020
-# définition des commandes utilisées
 CC = gcc
 ECHO = echo
 RM = rm -f
@@ -21,7 +16,7 @@ PROGNAME = shadedVAOTriangle
 VERSION = 1.6.2
 distdir = $(PACKNAME)_$(PROGNAME)-$(VERSION)
 HEADERS = 
-SOURCES = window.c structs.c forces.c main.c lib/cJSON.c
+SOURCES = window.c structs.c forces.c main.c lib/cJSON.c gestion_modeles.c
 MSVCSRC = $(patsubst %,<ClCompile Include=\"%\\\" \\/>,$(SOURCES))
 OBJ = $(SOURCES:.c=.o)
 DOXYFILE = documentation/Doxyfile
