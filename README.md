@@ -1,7 +1,7 @@
 
 # Simulation-de-tissus
 
-Projet de simulation de tissus en 3D soumis à des forces internes (ressorts) et des forces externes telles que le vent et la résistance d'un fluide dans lequel le tissu se déplace. Le but de ce projet est d'implémenter une représentation "réaliste" d'un tissu en utilisant OpenGL et GL4D (OpenGL Shading Language). L'application permettra de visualiser la simulation, offrant ainsi une représentation graphique du comportement du tissu en temps réél.
+Projet de simulation de tissus en 3D soumis à des forces internes (ressorts) et des forces externes telles que le vent et la résistance d'un fluide dans lequel le tissu se déplace. Le but de ce projet est d'implémenter une représentation "réaliste" d'un tissu en utilisant OpenGL et GL4D (OpenGL Shading Language). L'application permettra de visualiser la simulation, offrant ainsi une représentation graphique du comportement du tissu en temps réél. (Pas de collisions pour le moment)
 
 ## Bibliothèques utilisées
 
@@ -33,7 +33,7 @@ Après avoir installé GL4D, suivez les étapes ci-dessous :
 
 ### Contrôles
 
-    -  Mode Filaire : Appuyez sur la touche W pour passer en mode filaire. Cela affichera le modèle en utilisant un rendu filaire, montrant les arêtes et les contours du tissus.
+   -  Mode Filaire : Appuyez sur la touche W pour passer en mode filaire. Cela affichera le modèle en utilisant un rendu filaire, montrant les arêtes et les contours du tissus.
 
    -  Switch de vues : Cliquez sur la touche V pour basculer entre les différentes vues que j'ai créées. Cela vous permettra d'explorer différents angles et perspectives du modèle.
 
@@ -46,12 +46,13 @@ Vous pouvez créer vos propres modèles et les afficher avec mon programme en re
 #### Environnement
 
 C'est le plus simple. Voici un exemple de structure JSON pour définir l'environnement :
-```json
-{
-    "delta_t_": 0.1,
-    "forces_exterieures": {"x": 0, "y": 0, "z": 0},
-    "viscosite": 0.5
-}```
+```
+	{
+   		 "delta_t_": 0.1,
+   		 "forces_exterieures": {"x": 0, "y": 0, "z": 0},
+    		"viscosite": 0.5
+	}
+```
 
 -   `delta_t_` : représente l'écart de temps entre chaque image calculée. Nous utilisons le schéma d'Euler pour calculer les positions de chaque poids.
 -   `forces_exterieures` : indique la somme des forces que vous souhaitez appliquer au modèle, comme des forces dues au vent par exemple. Ces forces s'appliquent à l'ensemble du modèle.
@@ -79,7 +80,8 @@ La définition du tissu est un peu plus complexe. Voici un exemple de structure 
   "longueur_ressorts_repos": 1.0,
   "liste_index_poids_fixes": [2, 1],
   "nb_poids_fixes": 2
-}```
+}
+```
 
 Explications des différentes clés de la structure :
 
